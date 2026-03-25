@@ -4470,7 +4470,8 @@
     const sections = panel.querySelectorAll('.panel-scroll-body .section');
 
     function activateTab(tabName) {
-      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
+      // Update all tabs including dynamically added ones
+      mobileTabs.querySelectorAll('.mob-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
       sections.forEach(sec => {
         if (sec.dataset.section === tabName) {
           sec.classList.remove('mob-hidden');
@@ -4480,6 +4481,9 @@
         }
       });
     }
+
+    // Expose for external callers (e.g. watchProceduralPanel)
+    activateMobileTab = activateTab;
 
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -4626,15 +4630,17 @@
           e.preventDefault();
         }
 
-        // Pinch to zoom
+        // Pinch to zoom (3D mode)
         if (e.touches.length === 2) {
+          window._orbitTouch = false; // stop single-finger orbit during pinch
           const dx = e.touches[0].clientX - e.touches[1].clientX;
           const dy = e.touches[0].clientY - e.touches[1].clientY;
           const dist = Math.hypot(dx, dy);
           if (window._lastPinchDist) {
+            const diff = dist - window._lastPinchDist;
             const sliderZoom = document.getElementById('sliderZoom');
-            if (sliderZoom) {
-              const delta = dist > window._lastPinchDist ? 3 : -3;
+            if (sliderZoom && Math.abs(diff) > 2) {
+              const delta = Math.round(diff * 0.4);
               const newVal = Math.max(20, Math.min(200, parseInt(sliderZoom.value) + delta));
               sliderZoom.value = newVal;
               sliderZoom.dispatchEvent(new Event('input', { bubbles: true }));
@@ -4652,29 +4658,60 @@
       });
     }
 
-    // Procedural drag - add touch support
+    // Procedural drag + pinch-to-zoom on asciiWrap
     if (asciiWrap) {
+      let wrapPinchDist = 0;
+
       asciiWrap.addEventListener('touchstart', e => {
         if (!isMobile()) return;
         if (e.target.closest('button, input, select, .playback-bar, #panel, .canvas-toolbar')) return;
-        // Dispatch synthetic mousedown for procedural drag
-        asciiWrap.dispatchEvent(new MouseEvent('mousedown', {
-          clientX: e.touches[0].clientX,
-          clientY: e.touches[0].clientY,
-          bubbles: true
-        }));
+
+        if (e.touches.length === 2) {
+          // Start pinch tracking
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          wrapPinchDist = Math.hypot(dx, dy);
+        } else if (e.touches.length === 1) {
+          // Single finger drag for procedural
+          asciiWrap.dispatchEvent(new MouseEvent('mousedown', {
+            clientX: e.touches[0].clientX,
+            clientY: e.touches[0].clientY,
+            bubbles: true
+          }));
+        }
       }, { passive: true });
 
       asciiWrap.addEventListener('touchmove', e => {
         if (!isMobile()) return;
-        window.dispatchEvent(new MouseEvent('mousemove', {
-          clientX: e.touches[0].clientX,
-          clientY: e.touches[0].clientY
-        }));
-      }, { passive: true });
+
+        if (e.touches.length === 2) {
+          // Pinch-to-zoom in 2D mode (adjusts resolution)
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          const dist = Math.hypot(dx, dy);
+          if (wrapPinchDist && Math.abs(dist - wrapPinchDist) > 2) {
+            const diff = dist - wrapPinchDist;
+            const sliderRes = document.getElementById('sliderRes');
+            if (sliderRes) {
+              const delta = Math.round(diff * 0.15);
+              const newVal = Math.max(40, Math.min(220, parseInt(sliderRes.value) + delta));
+              sliderRes.value = newVal;
+              sliderRes.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            wrapPinchDist = dist;
+          }
+          e.preventDefault();
+        } else if (e.touches.length === 1) {
+          window.dispatchEvent(new MouseEvent('mousemove', {
+            clientX: e.touches[0].clientX,
+            clientY: e.touches[0].clientY
+          }));
+        }
+      }, { passive: false });
 
       asciiWrap.addEventListener('touchend', () => {
         if (!isMobile()) return;
+        wrapPinchDist = 0;
         window.dispatchEvent(new MouseEvent('mouseup'));
       });
     }
@@ -4711,6 +4748,46 @@
     });
   }
 
+  // Watch for procedural panel becoming visible and auto-switch tab
+  function watchProceduralPanel() {
+    const procPanel = document.getElementById('panelProcedural');
+    if (!procPanel || !mobileTabs) return;
+
+    // Add a "Shape" tab dynamically (hidden by default)
+    const shapeTab = document.createElement('button');
+    shapeTab.className = 'mob-tab';
+    shapeTab.dataset.tab = 'procedural';
+    shapeTab.textContent = 'Shape';
+    shapeTab.style.display = 'none';
+    mobileTabs.appendChild(shapeTab);
+
+    shapeTab.addEventListener('click', () => {
+      activateMobileTab('procedural');
+      if (sheetState === 'peek') setSheetState('open');
+    });
+
+    // Use MutationObserver to detect when procedural panel is shown/hidden
+    const observer = new MutationObserver(() => {
+      if (!isMobile()) return;
+      const isVisible = procPanel.style.display !== 'none';
+      shapeTab.style.display = isVisible ? '' : 'none';
+
+      if (isVisible) {
+        // Auto-switch to Shape tab and open the sheet
+        activateMobileTab('procedural');
+        if (sheetState === 'peek') setSheetState('open');
+      } else if (shapeTab.classList.contains('active')) {
+        // Shape was deactivated, switch back to Look
+        activateMobileTab('palette');
+      }
+    });
+
+    observer.observe(procPanel, { attributes: true, attributeFilter: ['style'] });
+  }
+
+  // Expose activateTab for watchProceduralPanel
+  let activateMobileTab = () => {};
+
   // Initialize mobile features
   function initMobile() {
     if (!isMobile()) {
@@ -4728,6 +4805,7 @@
     patchAccordion();
     patchPlaybackBar();
     patchDragEvents();
+    watchProceduralPanel();
     setSheetState('peek');
 
     // Make the 3D orbit mousedown fire on touchstart too
