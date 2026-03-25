@@ -4766,22 +4766,58 @@
       if (sheetState === 'peek') setSheetState('open');
     });
 
-    // Use MutationObserver to detect when procedural panel is shown/hidden
+    function showShapeTab() {
+      if (!isMobile()) return;
+      // Ensure inline display:none is cleared (buildProceduralControls does this,
+      // but we force it here for safety)
+      procPanel.style.display = '';
+      procPanel.classList.add('open');
+      shapeTab.style.display = '';
+      activateMobileTab('procedural');
+      setSheetState('open');
+    }
+
+    function hideShapeTab() {
+      if (!isMobile()) return;
+      shapeTab.style.display = 'none';
+      if (shapeTab.classList.contains('active')) {
+        activateMobileTab('palette');
+      }
+    }
+
+    // Hook directly into lib-card clicks (welcome screen shapes)
+    document.querySelectorAll('.lib-card[data-proc]').forEach(card => {
+      card.addEventListener('click', () => {
+        // Small delay to let buildProceduralControls finish
+        setTimeout(showShapeTab, 100);
+      });
+    });
+
+    // Hook into shape-picker-item clicks (procedural shape strip inside panel)
+    // These are created dynamically, so use event delegation
+    const procBody = document.getElementById('procSectionBody');
+    if (procBody) {
+      procBody.addEventListener('click', e => {
+        const item = e.target.closest('.shape-picker-item');
+        if (item) setTimeout(showShapeTab, 50);
+      });
+    }
+
+    // MutationObserver as backup for any other path that shows/hides procedural
     const observer = new MutationObserver(() => {
       if (!isMobile()) return;
       const isVisible = procPanel.style.display !== 'none';
-      shapeTab.style.display = isVisible ? '' : 'none';
-
       if (isVisible) {
-        // Auto-switch to Shape tab and open the sheet
-        activateMobileTab('procedural');
-        if (sheetState === 'peek') setSheetState('open');
-      } else if (shapeTab.classList.contains('active')) {
-        // Shape was deactivated, switch back to Look
-        activateMobileTab('palette');
+        shapeTab.style.display = '';
+        // Only auto-switch if not already on Shape tab
+        if (!shapeTab.classList.contains('active')) {
+          activateMobileTab('procedural');
+          if (sheetState === 'peek') setSheetState('open');
+        }
+      } else {
+        hideShapeTab();
       }
     });
-
     observer.observe(procPanel, { attributes: true, attributeFilter: ['style'] });
   }
 
