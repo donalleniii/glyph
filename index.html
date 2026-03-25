@@ -847,51 +847,6 @@
 
   .overlay-buttons { display: flex; gap: 12px; }
 
-  /* ── Password Gate ── */
-  #passwordGate {
-    position: fixed; inset: 0; z-index: 9999;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background: #000;
-  }
-  #passwordGate.hidden { display: none; }
-  .gate-title {
-    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
-    font-size: 24px; font-weight: 700; color: #fff;
-    letter-spacing: 4px; margin-bottom: 8px;
-  }
-  .gate-sub {
-    font-size: 12px; color: #555; letter-spacing: 1px;
-    margin-bottom: 32px;
-  }
-  .gate-input-wrap {
-    display: flex; gap: 8px; align-items: center;
-  }
-  #gatePassword {
-    padding: 10px 16px; background: #111; color: #fff;
-    border: 1px solid #333; border-radius: 8px;
-    font-size: 14px; font-family: inherit; outline: none;
-    width: 220px; transition: border-color .2s;
-  }
-  #gatePassword:focus { border-color: #666; }
-  #gatePassword.shake {
-    animation: gateShake .4s ease;
-    border-color: #cc3333;
-  }
-  @keyframes gateShake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-6px); }
-    40%, 80% { transform: translateX(6px); }
-  }
-  #gateSubmit {
-    padding: 10px 20px; background: #fff; color: #000;
-    border: none; border-radius: 8px; font-size: 14px;
-    font-weight: 600; cursor: pointer; transition: opacity .15s;
-  }
-  #gateSubmit:hover { opacity: .85; }
-  .gate-error {
-    margin-top: 12px; font-size: 12px; color: #cc3333;
-    height: 16px;
-  }
 
   /* ── Credits ── */
   .credits {
@@ -955,20 +910,164 @@
     font-size: 14px; font-weight: 600; cursor: pointer;
   }
   .terms-close:hover { opacity: .85; }
+
+  /* Desktop: hide mobile-only elements */
+  .sheet-handle { display: none; }
+  .mobile-tabs { display: none; }
+
+@media (max-width: 768px) {
+  body { height: 100dvh; flex-direction: column; }
+
+  #ascii-wrap { width: 100%; flex: 1; }
+
+  /* Bottom sheet */
+  #panel {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    width: 100%;
+    height: auto;
+    max-height: 70dvh;
+    border-left: none;
+    border-top: 1px solid #1e1e1e;
+    border-radius: 16px 16px 0 0;
+    z-index: 100;
+    transform: translateY(calc(100% - 56px));
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    flex-direction: column;
+  }
+  #panel.sheet-open { transform: translateY(0); }
+  #panel.sheet-hidden { transform: translateY(100%); }
+
+  /* Hide panel header on mobile - tabs replace it */
+  .panel-header { display: none; }
+
+  /* Sheet handle */
+  .sheet-handle {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0 4px;
+    cursor: grab;
+    flex-shrink: 0;
+  }
+  .sheet-handle-pill {
+    width: 36px;
+    height: 4px;
+    background: #444;
+    border-radius: 2px;
+  }
+
+  /* Mobile tabs */
+  .mobile-tabs {
+    display: flex !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0;
+    padding: 4px 8px 8px;
+    border-bottom: 1px solid #222;
+    flex-shrink: 0;
+    scrollbar-width: none;
+  }
+  .mobile-tabs::-webkit-scrollbar { display: none; }
+  .mob-tab {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #666;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .mob-tab.active {
+    color: #fff;
+    background: #1a1a1a;
+    border-color: #333;
+  }
+
+  /* Hide sections not selected by tab */
+  .section.mob-hidden { display: none !important; }
+
+  /* On mobile, sections are always "open" when visible */
+  .section:not(.mob-hidden) { }
+  .section:not(.mob-hidden) .section-body {
+    max-height: 2000px !important;
+    opacity: 1 !important;
+  }
+
+  /* Presets bar adjustments */
+  .presets-bar { padding: 4px 8px; }
+  .preset-grid { grid-template-columns: repeat(4, 1fr) !important; }
+
+  /* Bigger touch targets for sliders */
+  .slider-row input[type="range"]::-webkit-slider-thumb {
+    width: 22px;
+    height: 22px;
+  }
+  .slider-row input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+  }
+  .slider-row input[type="range"] { height: 6px; }
+  .slider-row { padding: 8px 14px; }
+
+  /* Canvas toolbar repositioning */
+  .canvas-toolbar {
+    top: auto !important;
+    bottom: 64px;
+    right: 8px;
+  }
+  .btn-label { display: none; }
+  .btn-toolbar { padding: 8px 10px; font-size: 14px; }
+
+  /* FPS control */
+  #viewerFpsControl {
+    top: env(safe-area-inset-top, 8px) !important;
+  }
+
+  /* Welcome screen adjustments */
+  .overlay-buttons { flex-direction: column; width: 70%; gap: 8px; }
+  .overlay-buttons button { width: 100%; }
+  .welcome-sub { font-size: 10px; }
+  .library-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  .library-label { font-size: 9px; }
+  .welcome-hint { font-size: 9px; }
+
+  /* Credits mobile */
+  .credits { font-size: 9px; padding: 0 16px; }
+
+  /* Mode toggle row */
+  .mode-toggle-row { padding: 4px 12px; }
+
+  /* Touch support */
+  #ascii3d { touch-action: none; }
+  #ascii-wrap.mode-procedural { touch-action: none; }
+  .panel-scroll-body { touch-action: pan-y; }
+
+  /* Shape buttons bigger */
+  .shape-btn { min-width: 40px; min-height: 36px; }
+
+  /* Anim preset grid */
+  .anim-preset-grid { grid-template-columns: repeat(3, 1fr); }
+
+  /* Playback bar always at bottom above sheet */
+  .playback-bar { bottom: 60px !important; }
+
+  /* Credits popup */
+  #creditsPopup { bottom: 70px !important; right: 8px; }
+
+  /* Export wrap */
+  .panel-actions { padding: 4px 8px; }
+  .btn-export-big { padding: 8px 16px; font-size: 13px; }
+}
 </style>
 </head>
 <body>
 
-<!-- Password Gate -->
-<div id="passwordGate">
-  <div class="gate-title">GLYPH</div>
-  <div class="gate-sub">Enter access code</div>
-  <div class="gate-input-wrap">
-    <input type="password" id="gatePassword" placeholder="Password" autocomplete="off">
-    <button id="gateSubmit">Enter</button>
-  </div>
-  <div class="gate-error" id="gateError"></div>
-</div>
 
 <!-- Terms of Use Modal -->
 <div id="termsModal">
@@ -1071,6 +1170,15 @@
 
 <!-- Side Panel -->
 <div id="panel">
+  <div class="sheet-handle" id="sheetHandle"><div class="sheet-handle-pill"></div></div>
+  <div class="mobile-tabs" id="mobileTabs" style="display:none">
+    <button class="mob-tab active" data-tab="palette">Look</button>
+    <button class="mob-tab" data-tab="motion">Motion</button>
+    <button class="mob-tab" data-tab="effects">Display</button>
+    <button class="mob-tab" data-tab="frame">Crop</button>
+    <button class="mob-tab" data-tab="3d">3D</button>
+    <button class="mob-tab" data-tab="basic">More</button>
+  </div>
   <div class="panel-header">
     <span style="font-family:Menlo,Monaco,monospace;letter-spacing:2px">GLYPH</span>
     <span class="fps-display" id="fps">-- fps</span>
@@ -1355,45 +1463,6 @@
  * PROPRIETARY SOFTWARE — Unauthorized copying or redistribution is prohibited.
  */
 
-// ══════════════════════════════════════
-// ── Password Gate ──
-// ══════════════════════════════════════
-(function() {
-  const HASH = 'f00af4defbb534909dea4b943e4f2a560e0e5d4427d3fd4fc6bfa4afa3193a57';
-  const gate = document.getElementById('passwordGate');
-  const inp = document.getElementById('gatePassword');
-  const btn = document.getElementById('gateSubmit');
-  const err = document.getElementById('gateError');
-
-  if (sessionStorage.getItem('glyph-auth') === 'true') {
-    gate.classList.add('hidden');
-  }
-
-  async function sha256(str) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  async function tryUnlock() {
-    const h = await sha256(inp.value);
-    if (h === HASH) {
-      sessionStorage.setItem('glyph-auth', 'true');
-      gate.style.transition = 'opacity .5s';
-      gate.style.opacity = '0';
-      setTimeout(() => gate.classList.add('hidden'), 500);
-    } else {
-      err.textContent = 'Incorrect password';
-      inp.classList.add('shake');
-      setTimeout(() => inp.classList.remove('shake'), 400);
-      inp.value = '';
-      inp.focus();
-    }
-  }
-
-  btn.addEventListener('click', tryUnlock);
-  inp.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
-  inp.focus();
-})();
 
 // ══════════════════════════════════════
 // ── Info / Credits / Terms ──
@@ -4372,6 +4441,335 @@
   }
 
   function showToast(msg) { toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); }
+})();
+
+// ══════════════════════════════════════
+// ── Mobile Support ──
+// ══════════════════════════════════════
+(function() {
+  const MOBILE_BP = 768;
+  const isMobile = () => window.innerWidth <= MOBILE_BP;
+  const panel = document.getElementById('panel');
+  const sheetHandle = document.getElementById('sheetHandle');
+  const mobileTabs = document.getElementById('mobileTabs');
+
+  let sheetState = 'peek'; // 'peek' | 'open' | 'hidden'
+
+  function setSheetState(state) {
+    sheetState = state;
+    panel.classList.remove('sheet-open', 'sheet-hidden');
+    if (state === 'open') panel.classList.add('sheet-open');
+    else if (state === 'hidden') panel.classList.add('sheet-hidden');
+    // 'peek' is default (no class)
+  }
+
+  // Mobile tab switching
+  function initMobileTabs() {
+    if (!mobileTabs) return;
+    const tabs = mobileTabs.querySelectorAll('.mob-tab');
+    const sections = panel.querySelectorAll('.panel-scroll-body .section');
+
+    function activateTab(tabName) {
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
+      sections.forEach(sec => {
+        if (sec.dataset.section === tabName) {
+          sec.classList.remove('mob-hidden');
+          sec.classList.add('open');
+        } else {
+          sec.classList.add('mob-hidden');
+        }
+      });
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        activateTab(tab.dataset.tab);
+        if (sheetState === 'peek') setSheetState('open');
+      });
+    });
+
+    // Initialize first tab
+    activateTab('palette');
+  }
+
+  // Sheet drag gesture
+  function initSheetDrag() {
+    if (!sheetHandle) return;
+    let startY = 0, startTranslate = 0, dragging = false;
+
+    sheetHandle.addEventListener('touchstart', e => {
+      dragging = true;
+      startY = e.touches[0].clientY;
+      panel.style.transition = 'none';
+      e.preventDefault();
+    }, { passive: false });
+
+    sheetHandle.addEventListener('touchmove', e => {
+      if (!dragging) return;
+      const dy = e.touches[0].clientY - startY;
+      const panelH = panel.offsetHeight;
+      const peekOffset = panelH - 56;
+
+      let base = sheetState === 'open' ? 0 : peekOffset;
+      let newY = Math.max(0, Math.min(panelH, base + dy));
+      panel.style.transform = `translateY(${newY}px)`;
+    }, { passive: false });
+
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      panel.style.transition = '';
+      const dy = (e.changedTouches ? e.changedTouches[0].clientY : e.clientY) - startY;
+
+      if (sheetState === 'peek' && dy < -40) {
+        setSheetState('open');
+      } else if (sheetState === 'open' && dy > 40) {
+        setSheetState('peek');
+      } else {
+        setSheetState(sheetState); // snap back
+      }
+      panel.style.transform = '';
+    }
+
+    sheetHandle.addEventListener('touchend', endDrag);
+    sheetHandle.addEventListener('touchcancel', endDrag);
+  }
+
+  // Override toggle UI button for mobile
+  function patchToggleButton() {
+    const btnToggle = document.getElementById('btnToggleUI');
+    if (!btnToggle) return;
+    const originalHandler = btnToggle.onclick;
+
+    btnToggle.addEventListener('click', e => {
+      if (!isMobile()) return; // let desktop handler run
+      e.stopImmediatePropagation();
+      if (sheetState === 'hidden') {
+        setSheetState('peek');
+        btnToggle.textContent = 'Hide';
+      } else {
+        setSheetState('hidden');
+        btnToggle.textContent = 'Show';
+      }
+    }, true); // capture phase to run before existing handler
+  }
+
+  // Disable accordion on mobile
+  function patchAccordion() {
+    document.querySelectorAll('.section-header').forEach(header => {
+      header.addEventListener('click', e => {
+        if (isMobile()) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+        }
+      }, true); // capture phase
+    });
+  }
+
+  // Convert hover previews to tap-to-commit on mobile
+  function patchHoverPreviews() {
+    // For presets, shapes, and charset options:
+    // On mobile, mouseenter never fires on touch, so tap goes straight to click.
+    // The mouseleave restore also won't fire. This is fine for presets/shapes because
+    // the click handler commits the selection.
+    // No JS change needed - touch naturally skips hover events.
+  }
+
+  // Playback bar: tap to toggle on mobile
+  function patchPlaybackBar() {
+    const asciiWrap = document.getElementById('ascii-wrap');
+    const playbackBar = document.getElementById('playbackBar');
+    if (!asciiWrap || !playbackBar) return;
+
+    let pbTapTimer = null;
+    asciiWrap.addEventListener('touchstart', e => {
+      if (!isMobile()) return;
+      if (e.target.closest('button, input, select, .playback-bar, #panel, .canvas-toolbar')) return;
+
+      playbackBar.classList.toggle('visible');
+      clearTimeout(pbTapTimer);
+      if (playbackBar.classList.contains('visible')) {
+        pbTapTimer = setTimeout(() => playbackBar.classList.remove('visible'), 3000);
+      }
+    }, { passive: true });
+  }
+
+  // Convert mouse drag events to pointer events
+  function patchDragEvents() {
+    const canvas3d = document.getElementById('ascii3d');
+    const asciiWrap = document.getElementById('ascii-wrap');
+    const overlayEl = document.getElementById('overlay');
+
+    // 3D Orbit - add touch support alongside existing mouse
+    if (canvas3d) {
+      canvas3d.addEventListener('touchstart', e => {
+        if (e.touches.length === 1) {
+          window._orbitTouch = true;
+          window._orbitTouchLastX = e.touches[0].clientX;
+          window._orbitTouchLastY = e.touches[0].clientY;
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      canvas3d.addEventListener('touchmove', e => {
+        if (e.touches.length === 1 && window._orbitTouch) {
+          const t = e.touches[0];
+          // Access the orbit variables from the parent scope
+          // These are in the 3D IIFE - we need to dispatch synthetic mouse events instead
+          const mousedown = new MouseEvent('mousedown', { clientX: window._orbitTouchLastX, clientY: window._orbitTouchLastY });
+          const mousemove = new MouseEvent('mousemove', { clientX: t.clientX, clientY: t.clientY });
+          // Actually, the orbit variables are accessed via closure. Let's use a simpler approach:
+          // Fire the existing mousemove handler by directly dispatching
+          window.dispatchEvent(new MouseEvent('mousemove', { clientX: t.clientX, clientY: t.clientY }));
+          window._orbitTouchLastX = t.clientX;
+          window._orbitTouchLastY = t.clientY;
+          e.preventDefault();
+        }
+
+        // Pinch to zoom
+        if (e.touches.length === 2) {
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          const dist = Math.hypot(dx, dy);
+          if (window._lastPinchDist) {
+            const sliderZoom = document.getElementById('sliderZoom');
+            if (sliderZoom) {
+              const delta = dist > window._lastPinchDist ? 3 : -3;
+              const newVal = Math.max(20, Math.min(200, parseInt(sliderZoom.value) + delta));
+              sliderZoom.value = newVal;
+              sliderZoom.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          }
+          window._lastPinchDist = dist;
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      canvas3d.addEventListener('touchend', e => {
+        window._orbitTouch = false;
+        window._lastPinchDist = 0;
+        window.dispatchEvent(new MouseEvent('mouseup'));
+      });
+    }
+
+    // Procedural drag - add touch support
+    if (asciiWrap) {
+      asciiWrap.addEventListener('touchstart', e => {
+        if (!isMobile()) return;
+        if (e.target.closest('button, input, select, .playback-bar, #panel, .canvas-toolbar')) return;
+        // Dispatch synthetic mousedown for procedural drag
+        asciiWrap.dispatchEvent(new MouseEvent('mousedown', {
+          clientX: e.touches[0].clientX,
+          clientY: e.touches[0].clientY,
+          bubbles: true
+        }));
+      }, { passive: true });
+
+      asciiWrap.addEventListener('touchmove', e => {
+        if (!isMobile()) return;
+        window.dispatchEvent(new MouseEvent('mousemove', {
+          clientX: e.touches[0].clientX,
+          clientY: e.touches[0].clientY
+        }));
+      }, { passive: true });
+
+      asciiWrap.addEventListener('touchend', () => {
+        if (!isMobile()) return;
+        window.dispatchEvent(new MouseEvent('mouseup'));
+      });
+    }
+
+    // Welcome screen drag - add touch support
+    if (overlayEl) {
+      overlayEl.addEventListener('touchstart', e => {
+        if (e.target.closest('button, input, select')) return;
+        overlayEl.dispatchEvent(new MouseEvent('mousedown', {
+          clientX: e.touches[0].clientX,
+          clientY: e.touches[0].clientY,
+          bubbles: false
+        }));
+      }, { passive: true });
+
+      overlayEl.addEventListener('touchmove', e => {
+        window.dispatchEvent(new MouseEvent('mousemove', {
+          clientX: e.touches[0].clientX,
+          clientY: e.touches[0].clientY
+        }));
+        e.preventDefault();
+      }, { passive: false });
+
+      overlayEl.addEventListener('touchend', () => {
+        window.dispatchEvent(new MouseEvent('mouseup'));
+      });
+    }
+
+    // Slider undo: also listen for touchstart
+    document.querySelectorAll('#panel input[type="range"]').forEach(s => {
+      s.addEventListener('touchstart', () => {
+        if (typeof pushUndoState === 'function') pushUndoState();
+      }, { passive: true });
+    });
+  }
+
+  // Initialize mobile features
+  function initMobile() {
+    if (!isMobile()) {
+      // On desktop, ensure mobile elements are hidden
+      if (mobileTabs) mobileTabs.style.display = 'none';
+      return;
+    }
+
+    // Show mobile elements
+    if (mobileTabs) mobileTabs.style.display = '';
+
+    initMobileTabs();
+    initSheetDrag();
+    patchToggleButton();
+    patchAccordion();
+    patchPlaybackBar();
+    patchDragEvents();
+    setSheetState('peek');
+
+    // Make the 3D orbit mousedown fire on touchstart too
+    const canvas3d = document.getElementById('ascii3d');
+    if (canvas3d) {
+      canvas3d.addEventListener('touchstart', e => {
+        if (e.touches.length === 1) {
+          // Trigger the existing mousedown handler
+          canvas3d.dispatchEvent(new MouseEvent('mousedown', {
+            clientX: e.touches[0].clientX,
+            clientY: e.touches[0].clientY
+          }));
+        }
+      }, { passive: false });
+    }
+  }
+
+  // Run on load and handle orientation changes
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobile);
+  } else {
+    initMobile();
+  }
+
+  // Handle resize/orientation change
+  let lastMobile = isMobile();
+  window.addEventListener('resize', () => {
+    const nowMobile = isMobile();
+    if (nowMobile !== lastMobile) {
+      lastMobile = nowMobile;
+      if (nowMobile) {
+        if (mobileTabs) mobileTabs.style.display = '';
+        initMobileTabs();
+        setSheetState('peek');
+      } else {
+        // Restore desktop state
+        if (mobileTabs) mobileTabs.style.display = 'none';
+        panel.classList.remove('sheet-open', 'sheet-hidden');
+        panel.querySelectorAll('.section.mob-hidden').forEach(s => s.classList.remove('mob-hidden'));
+      }
+    }
+  });
 })();
 </script>
 </body>
