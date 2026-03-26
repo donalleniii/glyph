@@ -1103,6 +1103,7 @@
     <button class="btn-toolbar" id="btnHome" title="Return to home">&#8962;</button>
     <button class="btn-toolbar" id="btnImportCanvas" title="Import file">&#8593;<span class="btn-label"> Import</span></button>
     <button class="btn-toolbar btn-capture" id="btnCapture" title="Record video">&#9679;<span class="btn-label"> Capture</span></button>
+    <button class="btn-toolbar" id="btnFlipCam" title="Flip Camera" style="display:none">&#8635;</button>
     <span class="toolbar-spacer"></span>
     <button class="btn-toolbar" id="btnUndo" title="Undo (Cmd+Z)" disabled>&#8630;</button>
     <button class="btn-toolbar" id="btnRedo" title="Redo (Cmd+Shift+Z)" disabled>&#8631;</button>
@@ -3611,9 +3612,15 @@
   btnStart.addEventListener('click', startCamera);
   const btnCamTop = document.getElementById('btnCamTop');
   btnCamTop.addEventListener('click', startCamera);
-  async function startCamera() {
+  let currentFacingMode = 'user';
+
+  async function startCamera(facingOverride) {
+    const facing = facingOverride || currentFacingMode;
+    currentFacingMode = facing;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+      // Stop existing tracks before switching
+      if (cam.srcObject) cam.srcObject.getTracks().forEach(t => t.stop());
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
       cam.srcObject = stream; await cam.play();
       videoW = cam.videoWidth; videoH = cam.videoHeight;
       videoSource = 'webcam'; currentSource = cam;
@@ -3622,8 +3629,34 @@
       playbackBar.classList.add('hidden'); playbackBar.classList.remove('visible');
       videoScaleRow.style.display = 'none'; videoPosXRow.style.display = 'none'; videoPosYRow.style.display = 'none';
       btnCamTop.classList.add('live');
+      // Lower resolution on mobile for smoother start
+      if (window.innerWidth <= 768) {
+        const mobileRes = 60;
+        sliderRes.value = mobileRes; valRes.textContent = mobileRes;
+        sliderRes.dispatchEvent(new Event('input', { bubbles: true }));
+      }
       if (!running) { running = true; requestAnimationFrame(render); }
     } catch (err) { console.error(err); btnStart.textContent = 'Camera denied \u2013 click to retry'; }
+  }
+
+  // ── Camera Flip (mobile) ──
+  const btnFlipCam = document.getElementById('btnFlipCam');
+  if (btnFlipCam) {
+    // Show flip button on mobile when camera is live
+    function updateFlipButton() {
+      btnFlipCam.style.display = (window.innerWidth <= 768 && videoSource === 'webcam') ? '' : 'none';
+    }
+    btnFlipCam.addEventListener('click', () => {
+      const newFacing = currentFacingMode === 'user' ? 'environment' : 'user';
+      startCamera(newFacing);
+      showToast(newFacing === 'environment' ? 'Back Camera' : 'Front Camera');
+    });
+    // Update visibility when camera starts/stops
+    const origStartCamera = startCamera;
+    const _checkFlip = () => setTimeout(updateFlipButton, 100);
+    btnCamTop.addEventListener('click', _checkFlip);
+    btnStart.addEventListener('click', _checkFlip);
+    window.addEventListener('resize', updateFlipButton);
   }
 
   // ── Video Upload ──
@@ -4672,6 +4705,10 @@
     if (asciiWrap) {
       let wrapPinchDist = 0;
 
+      let camTouchStartX = 0, camTouchStartY = 0;
+      let camStartBright = 0, camStartContrast = 100;
+      let isCamDrag = false;
+
       asciiWrap.addEventListener('touchstart', e => {
         if (!isMobile()) return;
         if (e.target.closest('button, input, select, .playback-bar, #panel, .canvas-toolbar')) return;
@@ -4682,12 +4719,25 @@
           const dy = e.touches[0].clientY - e.touches[1].clientY;
           wrapPinchDist = Math.hypot(dx, dy);
         } else if (e.touches.length === 1) {
-          // Single finger drag for procedural
-          asciiWrap.dispatchEvent(new MouseEvent('mousedown', {
-            clientX: e.touches[0].clientX,
-            clientY: e.touches[0].clientY,
-            bubbles: true
-          }));
+          // Check if in camera mode for swipe-to-adjust
+          const vs = typeof videoSource !== 'undefined' ? videoSource : '';
+          if (vs === 'webcam' || vs === 'image' || vs === 'upload') {
+            isCamDrag = true;
+            camTouchStartX = e.touches[0].clientX;
+            camTouchStartY = e.touches[0].clientY;
+            const sBright = document.getElementById('sliderBright');
+            const sContrast = document.getElementById('sliderContrast');
+            camStartBright = sBright ? parseInt(sBright.value) : 0;
+            camStartContrast = sContrast ? parseInt(sContrast.value) : 100;
+          } else {
+            isCamDrag = false;
+            // Single finger drag for procedural
+            asciiWrap.dispatchEvent(new MouseEvent('mousedown', {
+              clientX: e.touches[0].clientX,
+              clientY: e.touches[0].clientY,
+              bubbles: true
+            }));
+          }
         }
       }, { passive: true });
 
@@ -4695,7 +4745,7 @@
         if (!isMobile()) return;
 
         if (e.touches.length === 2) {
-          // Pinch-to-zoom in 2D mode (adjusts resolution)
+          // Pinch-to-zoom (adjusts resolution)
           const dx = e.touches[0].clientX - e.touches[1].clientX;
           const dy = e.touches[0].clientY - e.touches[1].clientY;
           const dist = Math.hypot(dx, dy);
@@ -4711,6 +4761,26 @@
             wrapPinchDist = dist;
           }
           e.preventDefault();
+        } else if (e.touches.length === 1 && isCamDrag) {
+          // Camera mode: swipe adjusts brightness (X) and contrast (Y)
+          const dx = e.touches[0].clientX - camTouchStartX;
+          const dy = e.touches[0].clientY - camTouchStartY;
+          const wrapW = asciiWrap.offsetWidth;
+          const wrapH = asciiWrap.offsetHeight;
+
+          // Map horizontal drag to brightness (-100 to 100)
+          const brightDelta = Math.round((dx / wrapW) * 200);
+          const newBright = Math.max(-100, Math.min(100, camStartBright + brightDelta));
+          const sBright = document.getElementById('sliderBright');
+          if (sBright) { sBright.value = newBright; sBright.dispatchEvent(new Event('input', { bubbles: true })); }
+
+          // Map vertical drag to contrast (50 to 300, inverted: up = more)
+          const contrastDelta = Math.round((dy / wrapH) * -250);
+          const newContrast = Math.max(50, Math.min(300, camStartContrast + contrastDelta));
+          const sContrast = document.getElementById('sliderContrast');
+          if (sContrast) { sContrast.value = newContrast; sContrast.dispatchEvent(new Event('input', { bubbles: true })); }
+
+          e.preventDefault();
         } else if (e.touches.length === 1) {
           window.dispatchEvent(new MouseEvent('mousemove', {
             clientX: e.touches[0].clientX,
@@ -4722,6 +4792,7 @@
       asciiWrap.addEventListener('touchend', () => {
         if (!isMobile()) return;
         wrapPinchDist = 0;
+        isCamDrag = false;
         window.dispatchEvent(new MouseEvent('mouseup'));
       });
     }
