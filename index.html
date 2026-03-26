@@ -1016,23 +1016,101 @@
   .slider-row input[type="range"] { height: 6px; }
   .slider-row { padding: 8px 14px; }
 
-  /* Canvas toolbar repositioning */
+  /* ── Mobile Welcome Screen: two big obvious CTAs ── */
+  #overlay {
+    justify-content: flex-end !important;
+    padding-bottom: max(40px, env(safe-area-inset-bottom, 40px));
+  }
+
+  /* Hide cube & clutter — show only the title strip */
+  .welcome-ascii,
+  .library-label,
+  .library-grid,
+  .welcome-hint,
+  .credits { display: none !important; }
+
+  /* ── Compact brand strip (80px) ── */
+  #asciiTitle {
+    position: absolute !important;
+    top: 0; left: 0; right: 0;
+    height: 80px;
+    overflow: hidden;
+    cursor: pointer;
+    margin-bottom: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(5px, 1.8vw, 9px) !important;
+  }
+  #asciiTitle::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent, transparent 3px,
+      rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px
+    );
+    pointer-events: none;
+    animation: scanDrift 6s linear infinite;
+  }
+  @keyframes scanDrift {
+    from { background-position: 0 0; }
+    to   { background-position: 0 80px; }
+  }
+  #asciiTitle.splash-open {
+    position: fixed !important;
+    inset: 0 !important;
+    height: 100dvh !important;
+    z-index: 200;
+    background: #000;
+    font-size: clamp(6px, 2.5vw, 14px) !important;
+    cursor: pointer;
+  }
+
+  /* Subtitle */
+  .welcome-sub {
+    font-size: 11px !important;
+    margin-bottom: 48px !important;
+    letter-spacing: 3px;
+  }
+
+  /* Two full-width chunky buttons */
+  .overlay-buttons {
+    flex-direction: column !important;
+    width: calc(100% - 48px) !important;
+    gap: 14px !important;
+    margin: 0 auto;
+  }
+  .overlay-buttons button { width: 100% !important; }
+
+  #btnStart {
+    padding: 22px 24px !important;
+    font-size: 18px !important;
+    border-radius: 16px !important;
+    letter-spacing: 0.3px;
+  }
+  #btnUpload {
+    padding: 20px 24px !important;
+    font-size: 17px !important;
+    border-radius: 16px !important;
+  }
+  .btn-start-cam, .btn-import { justify-content: center !important; }
+  .rec-dot { width: 12px; height: 12px; }
+
+  /* ── Mobile Toolbar: essentials only ── */
   .canvas-toolbar {
     top: auto !important;
     bottom: 10px;
-    right: 6px;
-    gap: 5px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    max-width: calc(100vw - 12px);
+    right: 8px;
+    gap: 6px;
+    flex-wrap: nowrap;
   }
-
-  /* Mobile: bigger labeled toolbar buttons */
+  #btnRandom, #btnUndo, #btnRedo { display: none !important; }
   .btn-toolbar {
-    padding: 10px 10px 7px;
-    font-size: 20px;
-    min-width: 52px;
-    min-height: 56px;
+    padding: 9px 10px 6px;
+    font-size: 18px;
+    min-width: 50px;
+    min-height: 52px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1044,73 +1122,23 @@
     display: block !important;
     font-size: 9px;
     font-weight: 700;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
-    opacity: 0.85;
+    opacity: 0.8;
     line-height: 1;
     white-space: nowrap;
   }
-
-  /* Red dot capture button â extra prominent */
   #btnCapture {
-    font-size: 24px !important;
-    min-width: 58px !important;
-    min-height: 62px !important;
+    font-size: 22px !important;
+    min-width: 56px !important;
+    min-height: 58px !important;
   }
-
-  /* Collapsed state: revert to compact on mobile too */
   .canvas-toolbar.collapsed .btn-toolbar {
-    min-width: 32px;
-    min-height: 32px;
-    padding: 6px 7px;
-    font-size: 14px;
+    min-width: 30px; min-height: 30px;
+    padding: 5px 7px; font-size: 13px;
   }
   .canvas-toolbar.collapsed .btn-label { display: none !important; }
 
-  /* FPS control */
-  #viewerFpsControl {
-    top: env(safe-area-inset-top, 8px) !important;
-  }
-
-  /* Welcome screen adjustments */
-  .overlay-buttons { flex-direction: column; width: 70%; gap: 8px; }
-  .overlay-buttons button { width: 100%; }
-  .welcome-sub { font-size: 10px; }
-  .library-grid { grid-template-columns: repeat(3, 1fr) !important; }
-  .library-label { font-size: 9px; }
-  .welcome-hint { font-size: 9px; }
-
-  /* Credits mobile */
-  .credits { font-size: 9px; padding: 0 16px; }
-
-  /* Mode toggle row */
-  .mode-toggle-row { padding: 4px 12px; }
-
-  /* Hide redundant controls in split-screen to maximize space */
-  #panel.sheet-open .mode-toggle-row,
-  #panel.sheet-open .presets-bar { display: none; }
-
-  /* Touch support */
-  #ascii3d { touch-action: none; }
-  #ascii-wrap.mode-procedural { touch-action: none; }
-  .panel-scroll-body { touch-action: pan-y; }
-
-  /* Shape buttons bigger */
-  .shape-btn { min-width: 40px; min-height: 36px; }
-
-  /* Anim preset grid */
-  .anim-preset-grid { grid-template-columns: repeat(3, 1fr); }
-
-  /* Playback bar always at bottom above sheet */
-  .playback-bar { bottom: 8px !important; }
-
-  /* Credits popup */
-  #creditsPopup { bottom: 8px !important; right: 8px; }
-
-  /* Export wrap */
-  .panel-actions { padding: 4px 8px; }
-  .btn-export-big { padding: 8px 16px; font-size: 13px; }
-}
 </style>
 </head>
 <body>
