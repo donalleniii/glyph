@@ -1044,6 +1044,10 @@
   /* Mode toggle row */
   .mode-toggle-row { padding: 4px 12px; }
 
+  /* Hide redundant controls in split-screen to maximize space */
+  #panel.sheet-open .mode-toggle-row,
+  #panel.sheet-open .presets-bar { display: none; }
+
   /* Touch support */
   #ascii3d { touch-action: none; }
   #ascii-wrap.mode-procedural { touch-action: none; }
