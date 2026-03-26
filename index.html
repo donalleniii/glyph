@@ -1571,7 +1571,7 @@
   let currentChars = CHAR_SETS['ascii'];
 
   // State
-  let cols = 120, brightness = 0, contrast = 1, fontSize = 7;
+  let cols = window.innerWidth <= 768 ? 50 : 120, brightness = 0, contrast = 1, fontSize = 7;
   let running = false, videoW = 0, videoH = 0;
   let prevLum = null, motionBuffer = null, frameTime = 0;
   let motionThreshold = 15, decayRate = 0.85;
@@ -3890,7 +3890,8 @@
       const testFont1 = aW / (120 * ca);
       const testFont2 = aH / (120 * vAspect);
       const autoFont = Math.max(3, Math.min(72, Math.floor(Math.min(testFont1, testFont2))));
-      const autoCols = Math.max(40, Math.min(220, Math.round(aW / (autoFont * ca))));
+      const maxCols = window.innerWidth <= 768 ? 80 : 220;
+      const autoCols = Math.max(40, Math.min(maxCols, Math.round(aW / (autoFont * ca))));
       fontSize = autoFont; cols = autoCols;
       asciiEl.style.fontSize = autoFont + 'px';
       sliderRes.value = autoCols; valRes.textContent = autoCols;
@@ -4755,8 +4756,9 @@
             const diff = dist - wrapPinchDist;
             const sliderRes = document.getElementById('sliderRes');
             if (sliderRes) {
+              const maxRes = window.innerWidth <= 768 ? 80 : 220;
               const delta = Math.round(diff * 0.15);
-              const newVal = Math.max(40, Math.min(220, parseInt(sliderRes.value) + delta));
+              const newVal = Math.max(40, Math.min(maxRes, parseInt(sliderRes.value) + delta));
               sliderRes.value = newVal;
               sliderRes.dispatchEvent(new Event('input', { bubbles: true }));
             }
