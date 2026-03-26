@@ -1019,11 +1019,53 @@
   /* Canvas toolbar repositioning */
   .canvas-toolbar {
     top: auto !important;
-    bottom: 8px;
-    right: 8px;
+    bottom: 10px;
+    right: 6px;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: calc(100vw - 12px);
   }
-  .btn-label { display: none; }
-  .btn-toolbar { padding: 8px 10px; font-size: 14px; }
+
+  /* Mobile: bigger labeled toolbar buttons */
+  .btn-toolbar {
+    padding: 10px 10px 7px;
+    font-size: 20px;
+    min-width: 52px;
+    min-height: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    line-height: 1;
+  }
+  .btn-label {
+    display: block !important;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* Red dot capture button — extra prominent */
+  #btnCapture {
+    font-size: 24px !important;
+    min-width: 58px !important;
+    min-height: 62px !important;
+  }
+
+  /* Collapsed state: revert to compact on mobile too */
+  .canvas-toolbar.collapsed .btn-toolbar {
+    min-width: 32px;
+    min-height: 32px;
+    padding: 6px 7px;
+    font-size: 14px;
+  }
+  .canvas-toolbar.collapsed .btn-label { display: none !important; }
 
   /* FPS control */
   #viewerFpsControl {
@@ -1099,14 +1141,14 @@
 <!-- ASCII Display -->
   <div id="ascii-wrap">
   <div class="canvas-toolbar" id="canvasToolbar">
-    <button class="btn-toolbar" id="btnRandom" title="Party Mode">&#10023;<span class="btn-label"> Party</span></button>
-    <button class="btn-toolbar" id="btnHome" title="Return to home">&#8962;</button>
-    <button class="btn-toolbar" id="btnImportCanvas" title="Import file">&#8593;<span class="btn-label"> Import</span></button>
-    <button class="btn-toolbar btn-capture" id="btnCapture" title="Record video">&#9679;<span class="btn-label"> Capture</span></button>
-    <button class="btn-toolbar" id="btnFlipCam" title="Flip Camera" style="display:none"><span class="btn-label">Front Cam</span></button>
+    <button class="btn-toolbar" id="btnRandom" title="Party Mode">&#10023;<span class="btn-label">Party</span></button>
+    <button class="btn-toolbar" id="btnHome" title="Return to home">&#8962;<span class="btn-label">Home</span></button>
+    <button class="btn-toolbar" id="btnImportCanvas" title="Import file">&#8593;<span class="btn-label">Import</span></button>
+    <button class="btn-toolbar btn-capture" id="btnCapture" title="Record video">&#9679;<span class="btn-label">Capture</span></button>
+    <button class="btn-toolbar" id="btnFlipCam" title="Flip Camera" style="display:none">&#8635;<span class="btn-label">Flip Cam</span></button>
     <span class="toolbar-spacer"></span>
-    <button class="btn-toolbar" id="btnUndo" title="Undo (Cmd+Z)" disabled>&#8630;</button>
-    <button class="btn-toolbar" id="btnRedo" title="Redo (Cmd+Shift+Z)" disabled>&#8631;</button>
+    <button class="btn-toolbar" id="btnUndo" title="Undo (Cmd+Z)" disabled>&#8630;<span class="btn-label">Undo</span></button>
+    <button class="btn-toolbar" id="btnRedo" title="Redo (Cmd+Shift+Z)" disabled>&#8631;<span class="btn-label">Redo</span></button>
     <button class="btn-toolbar" id="btnToggleUI">Hide</button>
     <button class="btn-info" id="btnInfo" title="About GLYPH">&#9432;</button>
   </div>
