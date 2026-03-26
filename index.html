@@ -1103,7 +1103,7 @@
     <button class="btn-toolbar" id="btnHome" title="Return to home">&#8962;</button>
     <button class="btn-toolbar" id="btnImportCanvas" title="Import file">&#8593;<span class="btn-label"> Import</span></button>
     <button class="btn-toolbar btn-capture" id="btnCapture" title="Record video">&#9679;<span class="btn-label"> Capture</span></button>
-    <button class="btn-toolbar" id="btnFlipCam" title="Flip Camera" style="display:none">&#8635;</button>
+    <button class="btn-toolbar" id="btnFlipCam" title="Flip Camera" style="display:none"><span class="btn-label">Front Cam</span></button>
     <span class="toolbar-spacer"></span>
     <button class="btn-toolbar" id="btnUndo" title="Undo (Cmd+Z)" disabled>&#8630;</button>
     <button class="btn-toolbar" id="btnRedo" title="Redo (Cmd+Shift+Z)" disabled>&#8631;</button>
@@ -3631,7 +3631,7 @@
       btnCamTop.classList.add('live');
       // Lower resolution on mobile for smoother start
       if (window.innerWidth <= 768) {
-        const mobileRes = 60;
+        const mobileRes = 30;
         sliderRes.value = mobileRes; valRes.textContent = mobileRes;
         sliderRes.dispatchEvent(new Event('input', { bubbles: true }));
       }
@@ -3649,7 +3649,9 @@
     btnFlipCam.addEventListener('click', () => {
       const newFacing = currentFacingMode === 'user' ? 'environment' : 'user';
       startCamera(newFacing);
-      showToast(newFacing === 'environment' ? 'Back Camera' : 'Front Camera');
+      const label = newFacing === 'environment' ? 'Back Cam' : 'Front Cam';
+      btnFlipCam.innerHTML = '<span class="btn-label">' + label + '</span>';
+      showToast(label);
     });
     // Update visibility when camera starts/stops
     const origStartCamera = startCamera;
