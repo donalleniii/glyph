@@ -920,24 +920,25 @@
 
   #ascii-wrap { width: 100%; flex: 1; }
 
-  /* Bottom sheet */
+  /* Bottom sheet — flex-flow split screen (not fixed overlay) */
   #panel {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
+    position: relative;
     width: 100%;
-    height: auto;
-    max-height: 70dvh;
+    height: 56px;
+    max-height: 85dvh;
+    min-height: 0;
     border-left: none;
     border-top: 1px solid #1e1e1e;
     border-radius: 16px 16px 0 0;
-    z-index: 100;
-    transform: translateY(calc(100% - 56px));
-    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    z-index: 10;
+    overflow: hidden;
+    transition: height 0.3s cubic-bezier(.4,0,.2,1);
     padding-bottom: env(safe-area-inset-bottom, 0px);
     flex-direction: column;
+    flex-shrink: 0;
   }
-  #panel.sheet-open { transform: translateY(0); }
-  #panel.sheet-hidden { transform: translateY(100%); }
+  #panel.sheet-open { overflow-y: auto; }
+  #panel.sheet-hidden { height: 0 !important; overflow: hidden; border-top: none; }
 
   /* Hide panel header on mobile - tabs replace it */
   .panel-header { display: none; }
@@ -1018,7 +1019,7 @@
   /* Canvas toolbar repositioning */
   .canvas-toolbar {
     top: auto !important;
-    bottom: 64px;
+    bottom: 8px;
     right: 8px;
   }
   .btn-label { display: none; }
@@ -1055,10 +1056,10 @@
   .anim-preset-grid { grid-template-columns: repeat(3, 1fr); }
 
   /* Playback bar always at bottom above sheet */
-  .playback-bar { bottom: 60px !important; }
+  .playback-bar { bottom: 8px !important; }
 
   /* Credits popup */
-  #creditsPopup { bottom: 70px !important; right: 8px; }
+  #creditsPopup { bottom: 8px !important; right: 8px; }
 
   /* Export wrap */
   .panel-actions { padding: 4px 8px; }
@@ -4454,13 +4455,21 @@
   const mobileTabs = document.getElementById('mobileTabs');
 
   let sheetState = 'peek'; // 'peek' | 'open' | 'hidden'
+  let splitHeight = Math.round(window.innerHeight * 0.5);
 
   function setSheetState(state) {
     sheetState = state;
     panel.classList.remove('sheet-open', 'sheet-hidden');
-    if (state === 'open') panel.classList.add('sheet-open');
-    else if (state === 'hidden') panel.classList.add('sheet-hidden');
-    // 'peek' is default (no class)
+    if (state === 'open') {
+      panel.classList.add('sheet-open');
+      panel.style.height = splitHeight + 'px';
+    } else if (state === 'hidden') {
+      panel.classList.add('sheet-hidden');
+      panel.style.height = '0px';
+    } else {
+      // peek
+      panel.style.height = '56px';
+    }
   }
 
   // Mobile tab switching
@@ -4496,14 +4505,15 @@
     activateTab('palette');
   }
 
-  // Sheet drag gesture
+  // Sheet drag gesture — height-based split screen
   function initSheetDrag() {
     if (!sheetHandle) return;
-    let startY = 0, startTranslate = 0, dragging = false;
+    let startY = 0, startHeight = 0, dragging = false;
 
     sheetHandle.addEventListener('touchstart', e => {
       dragging = true;
       startY = e.touches[0].clientY;
+      startHeight = panel.offsetHeight;
       panel.style.transition = 'none';
       e.preventDefault();
     }, { passive: false });
@@ -4511,28 +4521,24 @@
     sheetHandle.addEventListener('touchmove', e => {
       if (!dragging) return;
       const dy = e.touches[0].clientY - startY;
-      const panelH = panel.offsetHeight;
-      const peekOffset = panelH - 56;
-
-      let base = sheetState === 'open' ? 0 : peekOffset;
-      let newY = Math.max(0, Math.min(panelH, base + dy));
-      panel.style.transform = `translateY(${newY}px)`;
+      // Drag UP (negative dy) = grow panel; drag DOWN = shrink panel
+      const maxH = window.innerHeight * 0.85;
+      const newHeight = Math.max(56, Math.min(maxH, startHeight - dy));
+      panel.style.height = newHeight + 'px';
     }, { passive: false });
 
-    function endDrag(e) {
+    function endDrag() {
       if (!dragging) return;
       dragging = false;
       panel.style.transition = '';
-      const dy = (e.changedTouches ? e.changedTouches[0].clientY : e.clientY) - startY;
+      const finalHeight = panel.offsetHeight;
 
-      if (sheetState === 'peek' && dy < -40) {
-        setSheetState('open');
-      } else if (sheetState === 'open' && dy > 40) {
+      if (finalHeight <= 80) {
         setSheetState('peek');
       } else {
-        setSheetState(sheetState); // snap back
+        splitHeight = finalHeight;
+        setSheetState('open');
       }
-      panel.style.transform = '';
     }
 
     sheetHandle.addEventListener('touchend', endDrag);
@@ -4874,12 +4880,14 @@
       lastMobile = nowMobile;
       if (nowMobile) {
         if (mobileTabs) mobileTabs.style.display = '';
+        splitHeight = Math.round(window.innerHeight * 0.5);
         initMobileTabs();
         setSheetState('peek');
       } else {
         // Restore desktop state
         if (mobileTabs) mobileTabs.style.display = 'none';
         panel.classList.remove('sheet-open', 'sheet-hidden');
+        panel.style.height = '';  // clear inline height for desktop
         panel.querySelectorAll('.section.mob-hidden').forEach(s => s.classList.remove('mob-hidden'));
       }
     }
