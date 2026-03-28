@@ -4427,7 +4427,7 @@
       const type = btn.dataset.export;
       glyphLog('Export option selected: ' + type, 'export');
       if (type === 'image') exportImage();
-      else if (type === 'video') startRecording();
+      else if (type === 'video') runCountdownThenRecord();
     });
   });
 
