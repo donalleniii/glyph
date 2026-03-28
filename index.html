@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <!--
-  GLYPH â ASCII Art Engine
+  GLYPH — ASCII Art Engine
   Copyright (c) 2026 Asteria Research & Technology. All rights reserved.
   Engineered by Don Allen Stevenson III
 
-  PROPRIETARY SOFTWARE â NOT OPEN SOURCE
+  PROPRIETARY SOFTWARE — NOT OPEN SOURCE
   This source code is protected by copyright law. You may NOT copy, reproduce,
   redistribute, reverse-engineer, or commercially exploit this code in any form.
   Unauthorized use is strictly prohibited and may result in legal action.
@@ -32,7 +32,7 @@
     display: flex;
   }
 
-  /* ââ ASCII Area ââ */
+  /* ── ASCII Area ── */
   #ascii-wrap {
     flex: 1;
     overflow: hidden;
@@ -52,7 +52,7 @@
     user-select: text;
   }
 
-  /* ââ 3D Canvas ââ */
+  /* ── 3D Canvas ── */
   #ascii3d { display: none; position: absolute; inset: 0; width: 100%; height: 100%; }
   #ascii-wrap.mode-3d #ascii   { display: none; }
   #ascii-wrap.mode-3d #ascii3d { display: block; cursor: grab; }
@@ -60,7 +60,7 @@
   #ascii-wrap.mode-procedural { cursor: grab; }
   #ascii-wrap.mode-procedural:active { cursor: grabbing; }
 
-  /* ââ Overlay / Welcome Screen ââ */
+  /* ── Overlay / Welcome Screen ── */
   #overlay {
     position: absolute; inset: 0;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -139,7 +139,7 @@
   }
   #btnStart:hover { opacity: .85; }
 
-  /* ââ Canvas Toolbar ââ */
+  /* ── Canvas Toolbar ── */
   .canvas-toolbar {
     position: absolute; top: 10px; right: 10px; z-index: 20;
     display: flex; gap: 4px; align-items: center;
@@ -157,7 +157,7 @@
   .btn-toolbar:disabled { opacity: .25; cursor: default; }
   .btn-toolbar:disabled:hover { background: rgba(255,255,255,.08); color: #999; border-color: rgba(255,255,255,.12); }
 
-  /* ââ Collapsed toolbar when panel hidden ââ */
+  /* ── Collapsed toolbar when panel hidden ── */
   .canvas-toolbar.collapsed { gap: 3px; }
   .canvas-toolbar.collapsed .toolbar-spacer { width: 4px; }
   .canvas-toolbar.collapsed .btn-toolbar {
@@ -272,7 +272,7 @@
 
   /* undo/redo use .btn-toolbar */
 
-  /* ââ Side Panel ââ */
+  /* ── Side Panel ── */
   #panel {
     width: 304px; flex-shrink: 0; background: rgba(17,17,17,.97);
     border-left: 1px solid #1e1e1e; display: flex; flex-direction: column;
@@ -287,7 +287,7 @@
   .panel-scroll-body::-webkit-scrollbar-track { background: transparent; }
   .panel-scroll-body::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
-  /* ââ Collapsible Sections ââ */
+  /* ── Collapsible Sections ── */
   .section { position: relative; z-index: 0; }
   .section + .section { border-top: 1px solid #1a1a1a; }
 
@@ -334,7 +334,7 @@
   .section.open .section-body { max-height: 1200px; opacity: 1; overflow: visible; }
   .section:not(.open) .section-body { max-height: 0; opacity: 0; }
 
-  /* ââ Sticky Actions ââ */
+  /* ── Sticky Actions ── */
   .panel-actions {
     flex-shrink: 0; padding: 8px 0 12px;
     border-top: 1px solid #222; background: rgba(17,17,17,.97);
@@ -345,7 +345,7 @@
     letter-spacing: .8px; text-transform: uppercase; color: #3a3a3a;
   }
 
-  /* ââ Animation Preset Grid ââ */
+  /* ── Animation Preset Grid ── */
   .anim-preset-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
     padding: 6px 14px 8px;
@@ -431,7 +431,7 @@
     font-variant-numeric: tabular-nums; letter-spacing: 0; text-transform: none;
   }
 
-  /* ââ Mode Toggle ââ */
+  /* ── Mode Toggle ── */
   .mode-toggle-row {
     display: flex; align-items: center; justify-content: center;
     gap: 8px; padding: 10px 16px; border-bottom: 1px solid #222;
@@ -464,7 +464,7 @@
   }
   .panel-divider { display: none; } /* legacy, hidden */
 
-  /* ââ Slider Rows ââ */
+  /* ── Slider Rows ── */
   .slider-row { padding: 4px 14px; display: flex; align-items: center; gap: 6px; }
   .slider-row label { font-size: 10px; font-weight: 600; color: #555; min-width: 62px; letter-spacing: .2px; }
   .slider-row input[type="range"] {
@@ -484,7 +484,7 @@
   .slider-row .btn-anim:hover { border-color: #555; color: #aaa; }
   .slider-row .btn-anim.active { background: #2a6aff; border-color: #2a6aff; color: #fff; }
 
-  /* ââ Export Menu ââ */
+  /* ── Export Menu ── */
   .export-wrap { position: relative; flex: 1; }
   .export-menu {
     position: absolute; bottom: 100%; left: 0; right: 0;
@@ -584,7 +584,7 @@
   .anim-controls input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; border-radius: 50%; background: #888; cursor: pointer; }
   .anim-controls .anim-label { font-size: 9px; color: #555; letter-spacing: .3px; text-transform: uppercase; }
 
-  /* ââ Charset Dropdown ââ */
+  /* ── Charset Dropdown ── */
   .charset-row { padding: 4px 14px 6px; display: flex; align-items: flex-start; gap: 6px; }
   .charset-row label { font-size: 10px; font-weight: 600; color: #555; min-width: 62px; letter-spacing: .2px; }
   .charset-row select { flex: 1; background: #1a1a1a; color: #ccc; border: 1px solid #333; border-radius: 5px; font-size: 11px; padding: 5px 8px; outline: none; cursor: pointer; }
@@ -617,7 +617,7 @@
   .cs-opt.active { color: #fff; }
   .cs-opt.active::before { content: '\2713  '; font-size: 10px; }
 
-  /* ââ Shape Selector ââ */
+  /* ── Shape Selector ── */
   .shape-row { display: flex; gap: 4px; padding: 6px 14px 8px; }
   .shape-btn { width: 32px; height: 32px; border: 1.5px solid #2a2a2a; border-radius: 4px; background: #1a1a1a; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .12s, transform .1s; }
   .shape-btn:hover { border-color: #444; transform: scale(1.04); }
@@ -633,7 +633,7 @@
   .shape-btn[data-shape="star"] .shape-icon { background: none; width: 16px; height: 16px; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background: #888; }
   .shape-btn[data-shape="triangle"] .shape-icon { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
 
-  /* ââ Shape Picker Strip (inside procedural panel) ââ */
+  /* ── Shape Picker Strip (inside procedural panel) ── */
   .shape-picker-strip {
     display: flex; gap: 4px; padding: 6px 10px 8px;
     overflow-x: auto; scrollbar-width: none;
@@ -650,8 +650,8 @@
   .shape-picker-item span { font-size: 7px; color: #555; font-weight: 600; letter-spacing: .2px; }
   .shape-picker-item.active span { color: #8ab4ff; }
 
-  /* ââ Preset Grid ââ */
-  /* ââ Presets Bar (always visible) ââ */
+  /* ── Preset Grid ── */
+  /* ── Presets Bar (always visible) ── */
   .presets-bar {
     flex-shrink: 0; border-bottom: 1px solid #1e1e1e;
     padding: 0 0 2px;
@@ -738,7 +738,7 @@
   .preset-hologram { background: linear-gradient(135deg, #c0c0ff, #ffc0e0, #c0ffc0, #e0e0ff, #ffd0c0); }
   .preset-custom   { background: conic-gradient(from 0deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000); }
 
-  /* ââ Look Row ââ */
+  /* ── Look Row ── */
   .look-row { display: flex; align-items: center; gap: 12px; padding: 6px 14px 8px; }
   .look-item { display: flex; align-items: center; gap: 6px; }
   .look-item label { font-size: 11px; font-weight: 600; color: #888; }
@@ -766,8 +766,8 @@
 
   #cam, #cvs, #uploadVid { display: none; }
 
-  /* ââ Video Controls ââ */
-  /* ââ Playback Bar (YouTube-style) ââ */
+  /* ── Video Controls ── */
+  /* ── Playback Bar (YouTube-style) ── */
   .playback-bar {
     position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
     background: linear-gradient(transparent, rgba(0,0,0,.85));
@@ -848,7 +848,7 @@
   .overlay-buttons { display: flex; gap: 12px; }
 
 
-  /* ââ Credits ââ */
+  /* ── Credits ── */
   .credits {
     margin-top: 24px; text-align: center;
     font-size: 10px; color: #444; line-height: 1.6;
@@ -860,7 +860,7 @@
   .credits a:hover { color: #999; }
   .credits-line { display: block; }
 
-  /* ââ Info Button ââ */
+  /* ── Info Button ── */
   .btn-info {
     padding: 5px 8px; background: rgba(255,255,255,.08); color: #666;
     border: 1px solid rgba(255,255,255,.12); border-radius: 5px;
@@ -869,7 +869,7 @@
   }
   .btn-info:hover { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.25); }
 
-  /* ââ Credits Popup ââ */
+  /* ── Credits Popup ── */
   #creditsPopup {
     position: absolute; bottom: 50px; right: 10px; z-index: 30;
     background: rgba(10,10,10,.92); border: 1px solid rgba(255,255,255,.15);
@@ -881,7 +881,7 @@
   #creditsPopup a { color: #aaa; text-decoration: none; }
   #creditsPopup a:hover { color: #fff; }
 
-  /* ââ Terms Modal ââ */
+  /* ── Terms Modal ── */
   #termsModal {
     position: fixed; inset: 0; z-index: 10000;
     display: none; align-items: center; justify-content: center;
@@ -920,7 +920,7 @@
 
   #ascii-wrap { width: 100%; flex: 1; }
 
-  /* Bottom sheet â flex-flow split screen (not fixed overlay) */
+  /* Bottom sheet — flex-flow split screen (not fixed overlay) */
   #panel {
     position: relative;
     width: 100%;
@@ -1016,129 +1016,59 @@
   .slider-row input[type="range"] { height: 6px; }
   .slider-row { padding: 8px 14px; }
 
-  /* ── Mobile Welcome Screen: two big obvious CTAs ── */
-  #overlay {
-    justify-content: flex-end !important;
-    padding-bottom: max(40px, env(safe-area-inset-bottom, 40px));
-  }
-
-  /* Hide cube & clutter — show only the title strip */
-  .welcome-ascii,
-  .library-label,
-  .library-grid,
-  .welcome-hint,
-  .credits { display: none !important; }
-
-  /* ── Compact brand strip (80px) ── */
-  #asciiTitle {
-    position: absolute !important;
-    top: 0; left: 0; right: 0;
-    height: 80px;
-    overflow: hidden;
-    cursor: pointer;
-    margin-bottom: 0 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(5px, 1.8vw, 9px) !important;
-  }
-  #asciiTitle::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent, transparent 3px,
-      rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px
-    );
-    pointer-events: none;
-    animation: scanDrift 6s linear infinite;
-  }
-  @keyframes scanDrift {
-    from { background-position: 0 0; }
-    to   { background-position: 0 80px; }
-  }
-  #asciiTitle.splash-open {
-    position: fixed !important;
-    inset: 0 !important;
-    height: 100dvh !important;
-    z-index: 200;
-    background: #000;
-    font-size: clamp(6px, 2.5vw, 14px) !important;
-    cursor: pointer;
-  }
-
-  /* Subtitle */
-  .welcome-sub {
-    font-size: 11px !important;
-    margin-bottom: 48px !important;
-    letter-spacing: 3px;
-  }
-
-  /* Two full-width chunky buttons */
-  .overlay-buttons {
-    flex-direction: column !important;
-    width: calc(100% - 48px) !important;
-    gap: 14px !important;
-    margin: 0 auto;
-  }
-  .overlay-buttons button { width: 100% !important; }
-
-  #btnStart {
-    padding: 22px 24px !important;
-    font-size: 18px !important;
-    border-radius: 16px !important;
-    letter-spacing: 0.3px;
-  }
-  #btnUpload {
-    padding: 20px 24px !important;
-    font-size: 17px !important;
-    border-radius: 16px !important;
-  }
-  .btn-start-cam, .btn-import { justify-content: center !important; }
-  .rec-dot { width: 12px; height: 12px; }
-
-  /* ── Mobile Toolbar: essentials only ── */
+  /* Canvas toolbar repositioning */
   .canvas-toolbar {
     top: auto !important;
-    bottom: 10px;
+    bottom: 8px;
     right: 8px;
-    gap: 6px;
-    flex-wrap: nowrap;
   }
-  #btnRandom, #btnUndo, #btnRedo { display: none !important; }
-  .btn-toolbar {
-    padding: 9px 10px 6px;
-    font-size: 18px;
-    min-width: 50px;
-    min-height: 52px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    line-height: 1;
-  }
-  .btn-label {
-    display: block !important;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-    opacity: 0.8;
-    line-height: 1;
-    white-space: nowrap;
-  }
-  #btnCapture {
-    font-size: 22px !important;
-    min-width: 56px !important;
-    min-height: 58px !important;
-  }
-  .canvas-toolbar.collapsed .btn-toolbar {
-    min-width: 30px; min-height: 30px;
-    padding: 5px 7px; font-size: 13px;
-  }
-  .canvas-toolbar.collapsed .btn-label { display: none !important; }
+  .btn-label { display: none; }
+  .btn-toolbar { padding: 8px 10px; font-size: 14px; }
 
+  /* FPS control */
+  #viewerFpsControl {
+    top: env(safe-area-inset-top, 8px) !important;
+  }
+
+  /* Welcome screen adjustments */
+  .overlay-buttons { flex-direction: column; width: 70%; gap: 8px; }
+  .overlay-buttons button { width: 100%; }
+  .welcome-sub { font-size: 10px; }
+  .library-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  .library-label { font-size: 9px; }
+  .welcome-hint { font-size: 9px; }
+
+  /* Credits mobile */
+  .credits { font-size: 9px; padding: 0 16px; }
+
+  /* Mode toggle row */
+  .mode-toggle-row { padding: 4px 12px; }
+
+  /* Hide redundant controls in split-screen to maximize space */
+  #panel.sheet-open .mode-toggle-row,
+  #panel.sheet-open .presets-bar { display: none; }
+
+  /* Touch support */
+  #ascii3d { touch-action: none; }
+  #ascii-wrap.mode-procedural { touch-action: none; }
+  .panel-scroll-body { touch-action: pan-y; }
+
+  /* Shape buttons bigger */
+  .shape-btn { min-width: 40px; min-height: 36px; }
+
+  /* Anim preset grid */
+  .anim-preset-grid { grid-template-columns: repeat(3, 1fr); }
+
+  /* Playback bar always at bottom above sheet */
+  .playback-bar { bottom: 8px !important; }
+
+  /* Credits popup */
+  #creditsPopup { bottom: 8px !important; right: 8px; }
+
+  /* Export wrap */
+  .panel-actions { padding: 4px 8px; }
+  .btn-export-big { padding: 8px 16px; font-size: 13px; }
+}
 </style>
 </head>
 <body>
@@ -1169,14 +1099,14 @@
 <!-- ASCII Display -->
   <div id="ascii-wrap">
   <div class="canvas-toolbar" id="canvasToolbar">
-    <button class="btn-toolbar" id="btnRandom" title="Party Mode">&#10023;<span class="btn-label">Party</span></button>
-    <button class="btn-toolbar" id="btnHome" title="Return to home">&#8962;<span class="btn-label">Home</span></button>
-    <button class="btn-toolbar" id="btnImportCanvas" title="Import file">&#8593;<span class="btn-label">Import</span></button>
-    <button class="btn-toolbar btn-capture" id="btnCapture" title="Record video">&#9679;<span class="btn-label">Capture</span></button>
-    <button class="btn-toolbar" id="btnFlipCam" title="Flip Camera" style="display:none">&#8635;<span class="btn-label">Flip Cam</span></button>
+    <button class="btn-toolbar" id="btnRandom" title="Party Mode">&#10023;<span class="btn-label"> Party</span></button>
+    <button class="btn-toolbar" id="btnHome" title="Return to home">&#8962;</button>
+    <button class="btn-toolbar" id="btnImportCanvas" title="Import file">&#8593;<span class="btn-label"> Import</span></button>
+    <button class="btn-toolbar btn-capture" id="btnCapture" title="Record video">&#9679;<span class="btn-label"> Capture</span></button>
+    <button class="btn-toolbar" id="btnFlipCam" title="Flip Camera" style="display:none"><span class="btn-label">Front Cam</span></button>
     <span class="toolbar-spacer"></span>
-    <button class="btn-toolbar" id="btnUndo" title="Undo (Cmd+Z)" disabled>&#8630;<span class="btn-label">Undo</span></button>
-    <button class="btn-toolbar" id="btnRedo" title="Redo (Cmd+Shift+Z)" disabled>&#8631;<span class="btn-label">Redo</span></button>
+    <button class="btn-toolbar" id="btnUndo" title="Undo (Cmd+Z)" disabled>&#8630;</button>
+    <button class="btn-toolbar" id="btnRedo" title="Redo (Cmd+Shift+Z)" disabled>&#8631;</button>
     <button class="btn-toolbar" id="btnToggleUI">Hide</button>
     <button class="btn-info" id="btnInfo" title="About GLYPH">&#9432;</button>
   </div>
@@ -1275,7 +1205,7 @@
 
   <div class="panel-scroll-body">
 
-    <!-- âââ Look (data-section="palette" for JS compat) âââ -->
+    <!-- ═══ Look (data-section="palette" for JS compat) ═══ -->
     <div class="section open" data-section="palette">
       <button class="section-header"><span class="section-chevron">&#9656;</span><span class="section-title">Look</span><span class="mono-toggle-wrap" onclick="event.stopPropagation()"><label class="mini-switch" title="Monochrome mode"><input type="checkbox" id="btnMonochrome"><span class="mini-switch-track"><span class="mini-switch-knob"></span></span><span class="mini-switch-label">Mono</span></label></span><span class="section-preview">Rainbow</span></button>
       <div class="section-body">
@@ -1356,7 +1286,7 @@
       </div>
     </div>
 
-    <!-- âââ Motion (new section) âââ -->
+    <!-- ═══ Motion (new section) ═══ -->
     <div class="section" data-section="motion">
       <button class="section-header"><span class="section-chevron">&#9656;</span><span class="section-title">Motion</span><span class="mono-toggle-wrap" onclick="event.stopPropagation()"><label class="mini-switch" title="Motion trails"><input type="checkbox" id="headerTrailToggle" checked><span class="mini-switch-track"><span class="mini-switch-knob"></span></span><span class="mini-switch-label">Trail</span></label></span><span class="section-preview">Trail ON</span></button>
       <div class="section-body">
@@ -1385,7 +1315,7 @@
       </div>
     </div>
 
-    <!-- âââ Display (data-section="effects" for JS compat) âââ -->
+    <!-- ═══ Display (data-section="effects" for JS compat) ═══ -->
     <div class="section" data-section="effects">
       <button class="section-header"><span class="section-chevron">&#9656;</span><span class="section-title">Display</span><span class="mono-toggle-wrap" onclick="event.stopPropagation()"><label class="mini-switch" title="Fill screen"><input type="checkbox" id="headerFillToggle" checked><span class="mini-switch-track"><span class="mini-switch-knob"></span></span><span class="mini-switch-label">Fill</span></label></span><span class="section-preview"></span></button>
       <div class="section-body">
@@ -1448,7 +1378,7 @@
       </div>
     </div>
 
-    <!-- âââ Shape (data-section="frame" for JS compat) âââ -->
+    <!-- ═══ Shape (data-section="frame" for JS compat) ═══ -->
     <div class="section" data-section="frame">
       <button class="section-header"><span class="section-chevron">&#9656;</span><span class="section-title">Frame Crop</span><span class="mono-toggle-wrap" onclick="event.stopPropagation()"><label class="mini-switch" title="Enable frame cropping"><input type="checkbox" id="headerCropToggle"><span class="mini-switch-track"><span class="mini-switch-knob"></span></span><span class="mini-switch-label">Crop</span></label></span><span class="section-preview">Rectangle</span></button>
       <div class="section-body">
@@ -1464,13 +1394,13 @@
       </div>
     </div>
 
-    <!-- âââ Procedural Shape Controls âââ -->
+    <!-- ═══ Procedural Shape Controls ═══ -->
     <div class="section open" data-section="procedural" id="panelProcedural" style="display:none">
       <button class="section-header"><span class="section-chevron">&#9656;</span><span class="section-title" id="procSectionTitle">Controls</span><span class="section-preview"></span></button>
       <div class="section-body" id="procSectionBody"></div>
     </div>
 
-    <!-- âââ Playback âââ -->
+    <!-- ═══ Playback ═══ -->
     <div class="section" data-section="basic">
       <button class="section-header"><span class="section-chevron">&#9656;</span><span class="section-title">Playback</span><span class="section-preview"></span></button>
       <div class="section-body">
@@ -1495,7 +1425,7 @@
       </div>
     </div>
 
-    <!-- âââ 3D Controls âââ -->
+    <!-- ═══ 3D Controls ═══ -->
     <div class="section open" data-section="3d" id="panel3d" style="display:none">
       <button class="section-header"><span class="section-chevron">&#9656;</span><span class="section-title">3D</span><span class="section-preview"></span></button>
       <div class="section-body">
@@ -1519,8 +1449,7 @@
     <div class="export-wrap" style="padding:8px 14px 12px;">
       <div id="exportMenu" class="export-menu">
         <button class="export-option" data-export="image">Image <span class="export-hint">PNG</span></button>
-        <button class="export-option" data-export="video">Video <span class="export-hint">MP4 · Recommended</span></button>
-        <button class="export-option" data-export="gif">GIF <span class="export-hint">Animated</span></button>
+        <button class="export-option" data-export="video">Video <span class="export-hint">MP4</span></button>
       </div>
       <button class="btn-export-big" id="btnExport"><span class="export-icon">&#8615;</span> Export</button>
     </div>
@@ -1534,16 +1463,16 @@
 
 <script>
 /*
- * GLYPH â ASCII Art Engine
+ * GLYPH — ASCII Art Engine
  * Copyright (c) 2026 Asteria Research & Technology. All rights reserved.
  * Engineered by Don Allen Stevenson III
- * PROPRIETARY SOFTWARE â Unauthorized copying or redistribution is prohibited.
+ * PROPRIETARY SOFTWARE — Unauthorized copying or redistribution is prohibited.
  */
 
 
-// ââââââââââââââââââââââââââââââââââââââ
-// ââ Info / Credits / Terms ââ
-// ââââââââââââââââââââââââââââââââââââââ
+// ══════════════════════════════════════
+// ── Info / Credits / Terms ──
+// ══════════════════════════════════════
 (function() {
   const btnInfo = document.getElementById('btnInfo');
   const popup = document.getElementById('creditsPopup');
@@ -1567,9 +1496,9 @@
   termsModal.addEventListener('click', e => { if (e.target === termsModal) termsModal.classList.remove('show'); });
 })();
 
-// ââââââââââââââââââââââââââââââââââââââ
-// ââ Main App ââ
-// ââââââââââââââââââââââââââââââââââââââ
+// ══════════════════════════════════════
+// ── Main App ──
+// ══════════════════════════════════════
 (() => {
   const welcomeArt = document.getElementById('welcomeArt');
   let welcomeFrame = 0;
@@ -1665,7 +1594,7 @@
   let proceduralFrame = 0;
   let proceduralTime = 0;
 
-  // ââ Procedural Shape Parameter Definitions ââ
+  // ── Procedural Shape Parameter Definitions ──
   const SHAPE_PARAMS = {
     cube: {
       label: 'Cube',
@@ -1821,8 +1750,8 @@
   let depthScale = 120, perspective = 500, basePtSize = 10;
   let zoomFactor = 1.0, stretchY = 1.0, gridOpacity = 0.4;
 
-  // Inverse link: Resolution â Font Size
-  const LINK_K = 840; // 120 cols Ã 7px = baseline product
+  // Inverse link: Resolution ↔ Font Size
+  const LINK_K = 840; // 120 cols × 7px = baseline product
   let suppressLink = false;
   let slidersLinked = true;
   let fillScreen = true;
@@ -1877,7 +1806,7 @@
     return Math.max(0, Math.min(len - 1, Math.round(v)));
   }
 
-  // ââ Slider wiring ââ
+  // ── Slider wiring ──
   function wireSlider(slider, valSpan, parse, cb, displayFn) {
     const update = () => { const v = parse(slider.value); valSpan.textContent = displayFn ? displayFn(slider.value) : slider.value; cb(v); };
     slider.addEventListener('input', update);
@@ -2326,7 +2255,7 @@
   });
   syncViewerHudState();
 
-  // ââ Mode Toggle ââ
+  // ── Mode Toggle ──
   const btnMode = document.getElementById('btnMode');
   const modeLabels = document.querySelectorAll('.mode-label');
   const panel3d = document.getElementById('panel3d');
@@ -2340,7 +2269,7 @@
     modeLabels[1].classList.toggle('active', mode3d);
   });
 
-  // ââ Collapsible Sections ââ
+  // ── Collapsible Sections ──
   function updateSectionPreview(name) {
     const sec = document.querySelector('.section[data-section="' + name + '"]');
     if (!sec) return;
@@ -2350,7 +2279,7 @@
       case 'palette': {
         const a = document.querySelector('.preset-btn.active .preset-name');
         const label = a ? a.textContent : '';
-        pv.textContent = monochromeMode && label ? label + ' Â· Mono' : (monochromeMode ? 'Mono' : label);
+        pv.textContent = monochromeMode && label ? label + ' · Mono' : (monochromeMode ? 'Mono' : label);
         break;
       }
       case 'motion': { const trail = trailsEnabled ? 'Trail ON' : 'Trail OFF'; const aBtn = document.querySelector('.anim-preset-btn.active'); const an = aBtn ? aBtn.textContent : 'None'; pv.textContent = trail + (an !== 'None' ? ' \u00b7 ' + an : ''); break; }
@@ -2368,7 +2297,7 @@
     });
   });
 
-  // ââ Procedural Controls Builder ââ
+  // ── Procedural Controls Builder ──
   const panelProcedural = document.getElementById('panelProcedural');
   const procSectionTitle = document.getElementById('procSectionTitle');
   const procSectionBody = document.getElementById('procSectionBody');
@@ -2434,7 +2363,7 @@
         });
       });
 
-      // Mouse leave strip â restore
+      // Mouse leave strip → restore
       strip.addEventListener('mouseleave', () => {
         if (_pickerPreviewRestore !== null) {
           proceduralShape = _pickerPreviewRestore;
@@ -2550,7 +2479,7 @@
     btnAutoRotate.textContent = autoRotate ? 'Stop Rotate' : 'Auto-Rotate';
   });
 
-  // ââ Mouse Orbit ââ
+  // ── Mouse Orbit ──
   canvas3d.addEventListener('mousedown', e => { orbitDragging = true; orbitLastX = e.clientX; orbitLastY = e.clientY; });
   window.addEventListener('mousemove', e => {
     if (!orbitDragging) return;
@@ -2567,7 +2496,7 @@
     fire(sliderZoom, newVal);
   }, { passive: false });
 
-  // ââ Click-and-Drag Orbit for Procedural Shapes ââ
+  // ── Click-and-Drag Orbit for Procedural Shapes ──
   let procYaw = 0, procPitch = 0.4;
   let procDragging = false, procDragLastX = 0, procDragLastY = 0;
 
@@ -2598,7 +2527,7 @@
     }
   });
 
-  // ââ Slider Animation Engine ââ
+  // ── Slider Animation Engine ──
   const animatable = {
     resolution: { slider: sliderRes, valSpan: valRes, apply: v => { cols = v; } },
     brightness: { slider: sliderBright, valSpan: valBright, apply: v => { brightness = v; } },
@@ -2653,7 +2582,7 @@
     }
   }
 
-  // ââ Shape Masking ââ
+  // ── Shape Masking ──
   function isInsideShape(x, y, w, h) {
     if (!frameCropEnabled || frameShape === 'rectangle') return true;
     const nx = x / w, ny = y / h, dx = nx - 0.5, dy = ny - 0.5;
@@ -2668,7 +2597,7 @@
     return true;
   }
 
-  // ââ Color Functions (24 presets) ââ
+  // ── Color Functions (24 presets) ──
   function getMotionColor(x, y, motion, sW, sH) {
     const t = frameTime;
     let color = '#ccc';
@@ -2701,7 +2630,7 @@
     return getDisplayColor(color);
   }
 
-  // ââ Welcome Screen: Rotating 3D ASCII Cube ââ
+  // ── Welcome Screen: Rotating 3D ASCII Cube ──
   const CUBE_VERTS = [[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
   const CUBE_EDGES = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
 
@@ -2733,7 +2662,7 @@
   });
   window.addEventListener('mouseup', () => { welcomeDragging = false; });
 
-  // ââ Animated ASCII Title (built from currentChars, colored by palette) ââ
+  // ── Animated ASCII Title (built from currentChars, colored by palette) ──
   // Bitmap font: each letter is 8 rows tall, variable width. 1=filled, 0=space.
   const LETTER_BITMAPS = {
     G: [
@@ -2885,7 +2814,7 @@
         if (gx < 0 || gx >= W || gy < 0 || gy >= H) continue;
         if (p.depth < dbuf[gy][gx]) {
           dbuf[gy][gx] = p.depth;
-          // Depth â char: closer = denser
+          // Depth → char: closer = denser
           const depthNorm = 1 - Math.max(0, Math.min(1, (p.depth - 2) / 6));
           let ci = Math.round(depthNorm * (rampLen - 1));
           if (textAnim !== 'none') ci = applyTextAnim(ci, gx, gy, welcomeFrame, rampLen, W, H);
@@ -2918,9 +2847,9 @@
   }
   drawWelcome();
 
-  // ââââââââââââââââââââââââââââââââââââââ
-  // ââ Procedural Shape Rendering ââ
-  // ââââââââââââââââââââââââââââââââââââââ
+  // ══════════════════════════════════════
+  // ── Procedural Shape Rendering ──
+  // ══════════════════════════════════════
 
   function renderProceduralShape(c, w, h, frame) {
     c.fillStyle = '#000';
@@ -3240,7 +3169,7 @@
     }
   }
 
-  // Library grid â thumbnail previews
+  // Library grid — thumbnail previews
   function animateLibraryThumbs() {
     const cards = document.querySelectorAll('.lib-card');
     let libFrame = 0;
@@ -3265,7 +3194,7 @@
   }
   animateLibraryThumbs();
 
-  // Library card click â start procedural mode
+  // Library card click → start procedural mode
   document.querySelectorAll('.lib-card').forEach(card => {
     card.addEventListener('click', () => {
       proceduralShape = card.dataset.proc;
@@ -3284,9 +3213,9 @@
     });
   });
 
-  // ââââââââââââââââââââââââââââââââââââââ
-  // ââ Preset System ââ
-  // ââââââââââââââââââââââââââââââââââââââ
+  // ══════════════════════════════════════
+  // ── Preset System ──
+  // ══════════════════════════════════════
 
   const DEFAULT_PRESETS = [
     { name:'Midnight', cols:120, brightness:0, contrast:100, fontSize:7, motionThreshold:30, decayRate:75, fps:6, colorMode:'rainbow', customColor:'#ff0055', fontColor:'#333333', bgColor:'#000000', trailsEnabled:true, slidersLinked:true, fillScreen:true, frameShape:'rectangle', charset:'ascii', textAnim:'none', depthScale:120, perspective:500, basePtSize:10, zoomFactor:100, stretchY:100, gridOpacity:40 },
@@ -3334,9 +3263,9 @@
     localStorage.setItem(PRESET_LIBRARY_KEY, JSON.stringify(presetLibrary));
   }
 
-  // ââââââââââââââââââââââââââââââââââââââ
-  // ââ Undo / Redo System ââ
-  // ââââââââââââââââââââââââââââââââââââââ
+  // ══════════════════════════════════════
+  // ── Undo / Redo System ──
+  // ══════════════════════════════════════
   const MAX_UNDO = 12;
   const undoStack = [];
   let redoStack = [];
@@ -3648,7 +3577,7 @@
   persistPresetLibrary();
   renderPresetStrip();
 
-  // ââ Randomize ââ
+  // ── Randomize ──
   function randomInt(a, b) { return Math.floor(Math.random()*(b-a+1))+a; }
   function randomHex() { return '#'+Math.floor(Math.random()*16777216).toString(16).padStart(6,'0'); }
   function fire(s, v) { s.value = v; s.dispatchEvent(new Event('input')); }
@@ -3679,7 +3608,7 @@
     showToast('Party Mode!');
   });
 
-  // ââ Start Camera ââ
+  // ── Start Camera ──
   btnStart.addEventListener('click', startCamera);
   const btnCamTop = document.getElementById('btnCamTop');
   btnCamTop.addEventListener('click', startCamera);
@@ -3710,7 +3639,7 @@
     } catch (err) { console.error(err); btnStart.textContent = 'Camera denied \u2013 click to retry'; }
   }
 
-  // ââ Camera Flip (mobile) ââ
+  // ── Camera Flip (mobile) ──
   const btnFlipCam = document.getElementById('btnFlipCam');
   if (btnFlipCam) {
     // Show flip button on mobile when camera is live
@@ -3732,7 +3661,7 @@
     window.addEventListener('resize', updateFlipButton);
   }
 
-  // ââ Video Upload ââ
+  // ── Video Upload ──
   function loadMediaFile(file) {
     const isImage = file.type.startsWith('image/');
     const isVideo = file.type.startsWith('video/');
@@ -3821,7 +3750,7 @@
     fileInput.value = '';
   });
 
-  // ââ Drag & Drop Video ââ
+  // ── Drag & Drop Video ──
   asciiWrap.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; asciiWrap.style.outline = '2px solid rgba(42,106,255,.6)'; });
   asciiWrap.addEventListener('dragleave', () => { asciiWrap.style.outline = ''; });
   asciiWrap.addEventListener('drop', e => {
@@ -3831,7 +3760,7 @@
     if (file) loadMediaFile(file);
   });
 
-  // ââ Playback Bar Controls ââ
+  // ── Playback Bar Controls ──
 
   // Show/hide on hover
   let pbHideTimer = null;
@@ -3940,9 +3869,9 @@
     showToast('Switched to webcam');
   });
 
-  // ââââââââââââââââââââââââââââââââââââââ
-  // ââ Render Loop ââ
-  // ââââââââââââââââââââââââââââââââââââââ
+  // ══════════════════════════════════════
+  // ── Render Loop ──
+  // ══════════════════════════════════════
 
   function render(timestamp) {
     if (!running) return;
@@ -3955,7 +3884,7 @@
     if (fillScreen && !mode3d && videoW > 0) {
       const wr = asciiWrap.getBoundingClientRect();
       const aW = wr.width, aH = wr.height;
-      const ca = 0.6; // monospace char width â 0.6 Ã height
+      const ca = 0.6; // monospace char width ≈ 0.6 × height
       const vAspect = videoH / videoW * 0.5;
       // Try a range of cols and pick the best fit
       const testFont1 = aW / (120 * ca);
@@ -4035,7 +3964,7 @@
     requestAnimationFrame(render);
   }
 
-  // ââ 2D Renderer (existing) ââ
+  // ── 2D Renderer (existing) ──
   function render2D(sampleW, sampleH, lumArr, rampLen) {
     let out = '', spanOpen = false, currentColor = '';
     for (let y = 0; y < sampleH; y++) {
@@ -4065,7 +3994,7 @@
     asciiEl.innerHTML = out;
   }
 
-  // ââ 3D Renderer ââ
+  // ── 3D Renderer ──
   // Project a 3D point to screen coordinates
   function project3D(wx, wy, wz, cosY, sinY, cosP, sinP, cW, cH) {
     const rx = wx*cosY - wz*sinY;
@@ -4095,7 +4024,7 @@
     const halfW = sampleW / 2, halfH = sampleH / 2;
     const baseColor = getDisplayFontColor();
 
-    // ââ Draw axis grid (behind everything) ââ
+    // ── Draw axis grid (behind everything) ──
     if (gridOpacity > 0.01) {
       ctx3d.globalAlpha = gridOpacity * 0.5;
       ctx3d.strokeStyle = '#444';
@@ -4139,7 +4068,7 @@
       ctx3d.lineWidth = 1;
     }
 
-    // ââ Build & project character points ââ
+    // ── Build & project character points ──
     const points = [];
     for (let y = 0; y < sampleH; y++) {
       for (let x = 0; x < sampleW; x++) {
@@ -4187,8 +4116,8 @@
     ctx3d.globalAlpha = 1;
   }
 
-  // ââ Export System ââ
-  let isRecording = false, mediaRecorder = null, recordedChunks = [], recordingForGif = false;
+  // ── Export System ──
+  let isRecording = false, mediaRecorder = null, recordedChunks = [];
   const exportCanvas = document.createElement('canvas');
   const exportCtx = exportCanvas.getContext('2d');
   const btnCapture = document.getElementById('btnCapture');
@@ -4344,8 +4273,7 @@
       exportMenu.classList.remove('visible');
       const type = btn.dataset.export;
       if (type === 'image') exportImage();
-      else if (type === 'video') { recordingForGif = false; startRecording(); }
-      else if (type === 'gif') { recordingForGif = true; startRecording(); }
+      else if (type === 'video') startRecording();
     });
   });
 
@@ -4359,7 +4287,7 @@
     });
   }
 
-  // ââ WebM â MP4 conversion via FFmpeg WASM ââ
+  // ── WebM → MP4 conversion via FFmpeg WASM ──
   let ffmpegInstance = null;
   let ffmpegLoading = false;
   const FFMPEG_CORE_BASE_URL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd';
@@ -4432,7 +4360,7 @@
       typeof FFmpegUtil === 'undefined' ||
       typeof FFmpegUtil.toBlobURL !== 'function'
     ) {
-      showToast('Export converter loading failed â saving as WebM');
+      showToast('Export converter loading failed — saving as WebM');
       return null;
     }
     if (ffmpegLoading) { showToast('Converter still loading...'); return null; }
@@ -4498,89 +4426,7 @@
     } catch (err) {
       console.error('MP4 conversion failed:', err);
       downloadBlob(webmBlob, filename.replace('.mp4', '.webm'));
-      showToast('Conversion failed â saved as WebM');
-    }
-  }
-
-  async function convertToGif(webmBlob, filename) {
-    showToast('Preparing palette...');
-    const ff = await getFFmpeg();
-    if (!ff) {
-      showToast('GIF converter unavailable — saving as MP4');
-      await finalizeMp4Export(webmBlob, filename.replace('.gif', '.mp4'));
-      return;
-    }
-
-    const GIF_MAX_BYTES = 20 * 1024 * 1024;
-
-    try {
-      const data = new Uint8Array(await webmBlob.arrayBuffer());
-      await ff.writeFile('input.webm', data);
-
-      const attempts = [
-        { fps: 12, width: 720, colors: 256 },
-        { fps: 10, width: 480, colors: 256 },
-        { fps: 8,  width: 320, colors: 128 },
-        { fps: 6,  width: 240, colors: 64  },
-      ];
-
-      let gifData = null;
-
-      for (let i = 0; i < attempts.length; i++) {
-        const { fps, width, colors } = attempts[i];
-        const filters = 'fps=' + fps + ',scale=' + width + ':-1:flags=neighbor';
-
-        showToast(i === 0 ? 'Preparing palette...' : 'GIF too large (' + (gifData.length / (1024 * 1024)).toFixed(1) + 'MB), retrying...');
-
-        // Pass 1: generate optimized palette
-        await ff.exec([
-          '-i', 'input.webm',
-          '-vf', filters + ',palettegen=max_colors=' + colors + ':stats_mode=diff:reserve_transparent=0',
-          '-y', 'palette.png'
-        ]);
-
-        showToast('Encoding GIF...');
-
-        // Pass 2: encode GIF using palette
-        await ff.exec([
-          '-i', 'input.webm',
-          '-i', 'palette.png',
-          '-lavfi', filters + ' [x]; [x][1:v] paletteuse=dither=sierra2_4a:diff_mode=rectangle',
-          '-loop', '0',
-          '-y', 'output.gif'
-        ]);
-
-        gifData = await ff.readFile('output.gif');
-        try { await ff.deleteFile('palette.png'); } catch (e) {}
-
-        if (gifData.length <= GIF_MAX_BYTES) break;
-
-        if (i < attempts.length - 1) {
-          try { await ff.deleteFile('output.gif'); } catch (e) {}
-        }
-      }
-
-      const sizeMB = (gifData.length / (1024 * 1024)).toFixed(1);
-      const gifBlob = new Blob([gifData.buffer], { type: 'image/gif' });
-      downloadBlob(gifBlob, filename);
-
-      if (gifData.length > GIF_MAX_BYTES) {
-        showToast('GIF saved (' + sizeMB + 'MB — could not compress under 20MB)');
-      } else {
-        showToast('GIF saved! (' + sizeMB + 'MB)');
-      }
-
-      try { await ff.deleteFile('input.webm'); } catch (e) {}
-      try { await ff.deleteFile('output.gif'); } catch (e) {}
-    } catch (err) {
-      console.error('GIF conversion failed:', err);
-      showToast('GIF failed — saving as MP4 instead');
-      try {
-        await finalizeMp4Export(webmBlob, filename.replace('.gif', '.mp4'));
-      } catch (e2) {
-        downloadBlob(webmBlob, filename.replace('.gif', '.webm'));
-        showToast('Saved as WebM');
-      }
+      showToast('Conversion failed — saved as WebM');
     }
   }
 
@@ -4600,11 +4446,7 @@
         const blob = new Blob(recordedChunks, { type: outputMimeType });
         isRecording = false;
         resetRecordingUI();
-        if (recordingForGif) {
-          await convertToGif(blob, 'glyph-' + Date.now() + '.gif');
-        } else {
-          await finalizeMp4Export(blob, 'glyph-video-' + Date.now() + '.mp4');
-        }
+        await finalizeMp4Export(blob, 'glyph-video-' + Date.now() + '.mp4');
       };
       mediaRecorder.start();
       isRecording = true;
@@ -4642,9 +4484,9 @@
   function showToast(msg) { toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); }
 })();
 
-// ââââââââââââââââââââââââââââââââââââââ
-// ââ Mobile Support ââ
-// ââââââââââââââââââââââââââââââââââââââ
+// ══════════════════════════════════════
+// ── Mobile Support ──
+// ══════════════════════════════════════
 (function() {
   const MOBILE_BP = 768;
   const isMobile = () => window.innerWidth <= MOBILE_BP;
@@ -4703,7 +4545,7 @@
     activateTab('palette');
   }
 
-  // Sheet drag gesture â height-based split screen
+  // Sheet drag gesture — height-based split screen
   function initSheetDrag() {
     if (!sheetHandle) return;
     let startY = 0, startHeight = 0, dragging = false;
