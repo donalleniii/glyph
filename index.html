@@ -1519,7 +1519,8 @@
     <div class="export-wrap" style="padding:8px 14px 12px;">
       <div id="exportMenu" class="export-menu">
         <button class="export-option" data-export="image">Image <span class="export-hint">PNG</span></button>
-        <button class="export-option" data-export="video">Video <span class="export-hint">MP4</span></button>
+        <button class="export-option" data-export="video">Video <span class="export-hint">MP4 · Recommended</span></button>
+        <button class="export-option" data-export="gif">GIF <span class="export-hint">Animated</span></button>
       </div>
       <button class="btn-export-big" id="btnExport"><span class="export-icon">&#8615;</span> Export</button>
     </div>
@@ -4187,7 +4188,7 @@
   }
 
   // ââ Export System ââ
-  let isRecording = false, mediaRecorder = null, recordedChunks = [];
+  let isRecording = false, mediaRecorder = null, recordedChunks = [], recordingForGif = false;
   const exportCanvas = document.createElement('canvas');
   const exportCtx = exportCanvas.getContext('2d');
   const btnCapture = document.getElementById('btnCapture');
@@ -4343,7 +4344,8 @@
       exportMenu.classList.remove('visible');
       const type = btn.dataset.export;
       if (type === 'image') exportImage();
-      else if (type === 'video') startRecording();
+      else if (type === 'video') { recordingForGif = false; startRecording(); }
+      else if (type === 'gif') { recordingForGif = true; startRecording(); }
     });
   });
 
@@ -4500,6 +4502,88 @@
     }
   }
 
+  async function convertToGif(webmBlob, filename) {
+    showToast('Preparing palette...');
+    const ff = await getFFmpeg();
+    if (!ff) {
+      showToast('GIF converter unavailable — saving as MP4');
+      await finalizeMp4Export(webmBlob, filename.replace('.gif', '.mp4'));
+      return;
+    }
+
+    const GIF_MAX_BYTES = 20 * 1024 * 1024;
+
+    try {
+      const data = new Uint8Array(await webmBlob.arrayBuffer());
+      await ff.writeFile('input.webm', data);
+
+      const attempts = [
+        { fps: 12, width: 720, colors: 256 },
+        { fps: 10, width: 480, colors: 256 },
+        { fps: 8,  width: 320, colors: 128 },
+        { fps: 6,  width: 240, colors: 64  },
+      ];
+
+      let gifData = null;
+
+      for (let i = 0; i < attempts.length; i++) {
+        const { fps, width, colors } = attempts[i];
+        const filters = 'fps=' + fps + ',scale=' + width + ':-1:flags=neighbor';
+
+        showToast(i === 0 ? 'Preparing palette...' : 'GIF too large (' + (gifData.length / (1024 * 1024)).toFixed(1) + 'MB), retrying...');
+
+        // Pass 1: generate optimized palette
+        await ff.exec([
+          '-i', 'input.webm',
+          '-vf', filters + ',palettegen=max_colors=' + colors + ':stats_mode=diff:reserve_transparent=0',
+          '-y', 'palette.png'
+        ]);
+
+        showToast('Encoding GIF...');
+
+        // Pass 2: encode GIF using palette
+        await ff.exec([
+          '-i', 'input.webm',
+          '-i', 'palette.png',
+          '-lavfi', filters + ' [x]; [x][1:v] paletteuse=dither=sierra2_4a:diff_mode=rectangle',
+          '-loop', '0',
+          '-y', 'output.gif'
+        ]);
+
+        gifData = await ff.readFile('output.gif');
+        try { await ff.deleteFile('palette.png'); } catch (e) {}
+
+        if (gifData.length <= GIF_MAX_BYTES) break;
+
+        if (i < attempts.length - 1) {
+          try { await ff.deleteFile('output.gif'); } catch (e) {}
+        }
+      }
+
+      const sizeMB = (gifData.length / (1024 * 1024)).toFixed(1);
+      const gifBlob = new Blob([gifData.buffer], { type: 'image/gif' });
+      downloadBlob(gifBlob, filename);
+
+      if (gifData.length > GIF_MAX_BYTES) {
+        showToast('GIF saved (' + sizeMB + 'MB — could not compress under 20MB)');
+      } else {
+        showToast('GIF saved! (' + sizeMB + 'MB)');
+      }
+
+      try { await ff.deleteFile('input.webm'); } catch (e) {}
+      try { await ff.deleteFile('output.gif'); } catch (e) {}
+    } catch (err) {
+      console.error('GIF conversion failed:', err);
+      showToast('GIF failed — saving as MP4 instead');
+      try {
+        await finalizeMp4Export(webmBlob, filename.replace('.gif', '.mp4'));
+      } catch (e2) {
+        downloadBlob(webmBlob, filename.replace('.gif', '.webm'));
+        showToast('Saved as WebM');
+      }
+    }
+  }
+
 
   function startRecording() {
     // Pre-load FFmpeg in background while recording
@@ -4516,7 +4600,11 @@
         const blob = new Blob(recordedChunks, { type: outputMimeType });
         isRecording = false;
         resetRecordingUI();
-        await finalizeMp4Export(blob, 'glyph-video-' + Date.now() + '.mp4');
+        if (recordingForGif) {
+          await convertToGif(blob, 'glyph-' + Date.now() + '.gif');
+        } else {
+          await finalizeMp4Export(blob, 'glyph-video-' + Date.now() + '.mp4');
+        }
       };
       mediaRecorder.start();
       isRecording = true;
