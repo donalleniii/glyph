@@ -4368,8 +4368,12 @@
     const logicalWidth = maxLen * charW;
     const logicalHeight = rows.length * lineHeight;
 
-    exportCanvas.width = makeEven(Math.ceil(logicalWidth * EXPORT_SCALE));
-    exportCanvas.height = makeEven(Math.ceil(logicalHeight * EXPORT_SCALE));
+    const newW = makeEven(Math.ceil(logicalWidth * EXPORT_SCALE));
+    const newH = makeEven(Math.ceil(logicalHeight * EXPORT_SCALE));
+    if (exportCanvas.width !== newW || exportCanvas.height !== newH) {
+      exportCanvas.width = newW;
+      exportCanvas.height = newH;
+    }
     exportCtx.setTransform(1, 0, 0, 1, 0, 0);
     exportCtx.imageSmoothingEnabled = false;
     exportCtx.fillStyle = getDisplayBgColor();
