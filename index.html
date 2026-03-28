@@ -881,36 +881,6 @@
   #creditsPopup a { color: #aaa; text-decoration: none; }
   #creditsPopup a:hover { color: #fff; }
 
-  #logPanel {
-    position: absolute; bottom: 50px; right: 10px; z-index: 30;
-    background: rgba(10,10,10,.95); border: 1px solid rgba(255,255,255,.15);
-    border-radius: 10px; backdrop-filter: blur(12px);
-    width: 380px; max-width: calc(100vw - 20px);
-    display: none; font-family: 'Menlo','Monaco',monospace;
-  }
-  #logPanel.show { display: block; animation: fadeSlideUp .3s ease; }
-  #logHeader {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 14px 8px; border-bottom: 1px solid rgba(255,255,255,.08);
-  }
-  .log-action-btn {
-    background: rgba(255,255,255,.08); color: #888; border: none;
-    border-radius: 4px; padding: 3px 10px; font-size: 10px;
-    cursor: pointer; margin-left: 6px; font-family: inherit;
-  }
-  .log-action-btn:hover { background: rgba(255,255,255,.15); color: #fff; }
-  #logBody {
-    max-height: 300px; overflow-y: auto; padding: 8px 14px 12px;
-    font-size: 10px; line-height: 1.6;
-  }
-  #logBody::-webkit-scrollbar { width: 4px; }
-  #logBody::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
-  .log-entry { color: #aaa; white-space: pre-wrap; word-break: break-all; }
-  .log-entry .log-time { color: #555; margin-right: 6px; }
-  .log-entry.error { color: #ff6b6b; }
-  .log-entry.warn { color: #ffd93d; }
-  .log-entry.export { color: #6bcfff; }
-
   /* ââ Terms Modal ââ */
   #termsModal {
     position: fixed; inset: 0; z-index: 10000;
@@ -1208,18 +1178,7 @@
     <button class="btn-toolbar" id="btnUndo" title="Undo (Cmd+Z)" disabled>&#8630;<span class="btn-label">Undo</span></button>
     <button class="btn-toolbar" id="btnRedo" title="Redo (Cmd+Shift+Z)" disabled>&#8631;<span class="btn-label">Redo</span></button>
     <button class="btn-toolbar" id="btnToggleUI">Hide</button>
-    <button class="btn-info" id="btnLogs" title="Debug Logs">&#9638;</button>
     <button class="btn-info" id="btnInfo" title="About GLYPH">&#9432;</button>
-  </div>
-  <div id="logPanel">
-    <div id="logHeader">
-      <span style="font-weight:700;color:#999;font-size:11px;">Debug Logs</span>
-      <span>
-        <button id="logCopy" class="log-action-btn">Copy</button>
-        <button id="logClear" class="log-action-btn">Clear</button>
-      </span>
-    </div>
-    <div id="logBody"></div>
   </div>
   <div id="creditsPopup">
     &copy; 2026 Asteria Research &amp; Technology<br>
@@ -1605,48 +1564,6 @@
   termsLinkPopup.addEventListener('click', openTerms);
   termsClose.addEventListener('click', () => termsModal.classList.remove('show'));
   termsModal.addEventListener('click', e => { if (e.target === termsModal) termsModal.classList.remove('show'); });
-})();
-
-// Debug Log Panel
-(function() {
-  const btnLogs = document.getElementById('btnLogs');
-  const logPanel = document.getElementById('logPanel');
-  const logBody = document.getElementById('logBody');
-  const logCopy = document.getElementById('logCopy');
-  const logClear = document.getElementById('logClear');
-
-  btnLogs.addEventListener('click', e => {
-    e.stopPropagation();
-    logPanel.classList.toggle('show');
-  });
-  document.addEventListener('click', e => {
-    if (!logPanel.contains(e.target) && e.target !== btnLogs) logPanel.classList.remove('show');
-  });
-  logCopy.addEventListener('click', e => {
-    e.stopPropagation();
-    const text = Array.from(logBody.querySelectorAll('.log-entry'))
-      .map(el => el.textContent).join('\n');
-    navigator.clipboard.writeText(text).then(() => {
-      logCopy.textContent = 'Copied!';
-      setTimeout(() => logCopy.textContent = 'Copy', 1500);
-    });
-  });
-  logClear.addEventListener('click', e => {
-    e.stopPropagation();
-    logBody.innerHTML = '';
-  });
-
-  window.glyphLog = function(msg, level) {
-    const now = new Date();
-    const ts = now.toLocaleTimeString('en-US', { hour12: false }) + '.' + String(now.getMilliseconds()).padStart(3, '0');
-    const div = document.createElement('div');
-    div.className = 'log-entry' + (level ? ' ' + level : '');
-    div.innerHTML = '<span class="log-time">' + ts + '</span>' + msg.replace(/</g, '&lt;');
-    logBody.appendChild(div);
-    logBody.scrollTop = logBody.scrollHeight;
-    if (level === 'error') console.error('[glyph]', msg);
-    else console.log('[glyph]', msg);
-  };
 })();
 
 // ââââââââââââââââââââââââââââââââââââââ
@@ -4425,21 +4342,17 @@
     btn.addEventListener('click', () => {
       exportMenu.classList.remove('visible');
       const type = btn.dataset.export;
-      glyphLog('Export option selected: ' + type, 'export');
       if (type === 'image') exportImage();
-      else if (type === 'video') runCountdownThenRecord();
+      else if (type === 'video') startRecording();
     });
   });
 
   function exportImage() {
-    glyphLog('Exporting image (PNG)', 'export');
     const cvs = getExportCanvas();
-    if (!cvs) { glyphLog('No canvas to export', 'warn'); showToast('Nothing to export'); return; }
+    if (!cvs) { showToast('Nothing to export'); return; }
     cvs.toBlob(blob => {
       if (!blob) return;
-      const name = 'glyph-' + Date.now() + '.png';
-      glyphLog('Downloading ' + name + ' (' + (blob.size / 1024).toFixed(1) + 'KB)', 'export');
-      downloadBlob(blob, name);
+      downloadBlob(blob, 'glyph-' + Date.now() + '.png');
       showToast('Image saved as PNG');
     });
   }
@@ -4485,14 +4398,11 @@
   }
 
   async function finalizeMp4Export(blob, filename) {
-    glyphLog('finalizeMp4Export: blob type=' + blob.type + ', size=' + (blob.size / 1024).toFixed(1) + 'KB', 'export');
     if (isMp4MimeType(blob.type)) {
-      glyphLog('Already MP4, downloading directly', 'export');
       downloadBlob(blob, filename);
       showToast('MP4 saved!');
       return;
     }
-    glyphLog('WebM detected, converting to MP4...', 'export');
     await convertToMp4(blob, filename);
   }
 
@@ -4514,14 +4424,12 @@
 
 
   async function getFFmpeg() {
-    if (ffmpegInstance) { glyphLog('FFmpeg already loaded', 'export'); return ffmpegInstance; }
-    glyphLog('Loading FFmpeg WASM...', 'export');
+    if (ffmpegInstance) return ffmpegInstance;
     if (
       typeof FFmpeg === 'undefined' ||
       typeof FFmpegUtil === 'undefined' ||
       typeof FFmpegUtil.toBlobURL !== 'function'
     ) {
-      glyphLog('FFmpeg/FFmpegUtil not available: FFmpeg=' + (typeof FFmpeg) + ', FFmpegUtil=' + (typeof FFmpegUtil), 'error');
       showToast('Export converter loading failed â saving as WebM');
       return null;
     }
@@ -4529,7 +4437,7 @@
     ffmpegLoading = true;
     try {
       const ff = new FFmpeg.FFmpeg();
-      ff.on('log', ({ message }) => { glyphLog('[ffmpeg] ' + message); console.log('[ffmpeg]', message); });
+      ff.on('log', ({ message }) => { console.log('[ffmpeg]', message); });
       const coreURL = await FFmpegUtil.toBlobURL(
         FFMPEG_CORE_BASE_URL + '/ffmpeg-core.js',
         'text/javascript'
@@ -4549,10 +4457,8 @@
       });
       ffmpegInstance = ff;
       ffmpegLoading = false;
-      glyphLog('FFmpeg WASM loaded successfully', 'export');
       return ff;
     } catch (err) {
-      glyphLog('FFmpeg load failed: ' + err.message, 'error');
       console.error('FFmpeg load failed:', err);
       ffmpegLoading = false;
       return null;
@@ -4560,11 +4466,10 @@
   }
 
   async function convertToMp4(webmBlob, filename) {
-    glyphLog('convertToMp4: starting, blob size=' + (webmBlob.size / 1024).toFixed(1) + 'KB', 'export');
     showToast('Converting to MP4...');
     const ff = await getFFmpeg();
     if (!ff) {
-      glyphLog('FFmpeg unavailable, falling back to WebM download', 'warn');
+      // Fallback: just download WebM
       downloadBlob(webmBlob, filename.replace('.mp4', '.webm'));
       showToast('Saved as WebM (converter unavailable)');
       return;
@@ -4572,7 +4477,6 @@
     try {
       const data = new Uint8Array(await webmBlob.arrayBuffer());
       await ff.writeFile('input.webm', data);
-      glyphLog('Running FFmpeg MP4 encode...', 'export');
       await ff.exec([
         '-i', 'input.webm',
         '-b:v', '24M',
@@ -4584,21 +4488,21 @@
       ]);
       const mp4Data = await ff.readFile('output.mp4');
       const mp4Blob = new Blob([mp4Data.buffer], { type: 'video/mp4' });
-      glyphLog('MP4 ready: ' + (mp4Data.length / 1024).toFixed(1) + 'KB, downloading ' + filename, 'export');
       downloadBlob(mp4Blob, filename);
       showToast('MP4 saved!');
+      // Cleanup
       await ff.deleteFile('input.webm');
       await ff.deleteFile('output.mp4');
     } catch (err) {
-      glyphLog('MP4 conversion failed: ' + err.message, 'error');
       console.error('MP4 conversion failed:', err);
       downloadBlob(webmBlob, filename.replace('.mp4', '.webm'));
       showToast('Conversion failed â saved as WebM');
     }
   }
 
+
   function startRecording() {
-    glyphLog('startRecording: mode3d=' + mode3d, 'export');
+    // Pre-load FFmpeg in background while recording
     if (!isMp4MimeType(pickRecorderMimeType(true))) getFFmpeg();
     try {
       const target = mode3d ? canvas3d : exportCanvas;
@@ -4606,20 +4510,16 @@
       const stream = target.captureStream(30);
       mediaRecorder = createRecorder(stream, true);
       const outputMimeType = mediaRecorder.mimeType || pickRecorderMimeType(true) || 'video/webm';
-      glyphLog('MediaRecorder created: mimeType=' + outputMimeType, 'export');
       recordedChunks = [];
       mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
       mediaRecorder.onstop = async () => {
         const blob = new Blob(recordedChunks, { type: outputMimeType });
-        glyphLog('Recording stopped: ' + recordedChunks.length + ' chunks, blob=' + (blob.size / 1024).toFixed(1) + 'KB', 'export');
         isRecording = false;
         resetRecordingUI();
-        glyphLog('Routing to finalizeMp4Export', 'export');
         await finalizeMp4Export(blob, 'glyph-video-' + Date.now() + '.mp4');
       };
-      mediaRecorder.start(1000);
+      mediaRecorder.start();
       isRecording = true;
-      glyphLog('Recording started (timeslice=1000ms)', 'export');
       // Update export button
       btnExport.innerHTML = '\u23F9 Stop Recording';
       btnExport.style.background = '#cc3333'; btnExport.style.color = '#fff';
@@ -4645,7 +4545,6 @@
   }
 
   function stopRecording() {
-    glyphLog('stopRecording called', 'export');
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
       mediaRecorder.stop();
     }
