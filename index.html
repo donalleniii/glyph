@@ -1571,7 +1571,7 @@
   let currentChars = CHAR_SETS['ascii'];
 
   // State
-  let cols = window.innerWidth <= 768 ? 50 : 120, brightness = 0, contrast = 1, fontSize = 7;
+  let cols = window.innerWidth <= 768 ? 72 : 120, brightness = 0, contrast = 1, fontSize = window.innerWidth <= 768 ? 12 : 7;
   let running = false, videoW = 0, videoH = 0;
   let prevLum = null, motionBuffer = null, frameTime = 0;
   let motionThreshold = 15, decayRate = 0.85;
@@ -3631,7 +3631,7 @@
       btnCamTop.classList.add('live');
       // Lower resolution on mobile for smoother start
       if (window.innerWidth <= 768) {
-        const mobileRes = 30;
+        const mobileRes = 72;
         sliderRes.value = mobileRes; valRes.textContent = mobileRes;
         sliderRes.dispatchEvent(new Event('input', { bubbles: true }));
       }
